@@ -63,9 +63,7 @@ float wdir = 0.0;
 float wesq = 0.0;
 int pulsosDir = 0;
 int pulsosEsq = 0;
-//------Struct de controle----------
-controlP controlDIR;
-controlP controlESQ;
+
 //----------------------------------
 
 //pinos para chaveamento do controle
@@ -138,8 +136,8 @@ void setup()
   readCalibBlack(caliBlack); 
 
 
-  Refdir = 0.5;
-  Refesq = 0.5;
+  Refdir = 0.1;
+  Refesq = 0.1;
   delay(4000);
 }
 
@@ -155,96 +153,7 @@ void loop()
   delay(500);
   }
   */
-  // variavel que calcula erro de desvio da pista
-  int erro = calculaErro();
-  // variavel que retornar valor binario com posicao dos sensores
-  // 1Frontal,4Esquerda,4Direita
-  int bin  = leituraBin2(); 
-  
-  //caso esteja totalmente no branco, continua com ultima atuacao
-  if(bin == 0)
-     erro = erroPassado;
-
-  //caso detectar preto, utilizar vel_media como vel_minima
-  if(erro!=0.0 && digitalRead(chave1))
-    vel_media = vel_min;
-
-  Refdir = calculaRef('d',erro);
-  Refesq = calculaRef('e',erro);
-  
-
-  //logica para fim da pista NA ESQUERDA
-  #if PARAESQUERDA
-    if(bin == 0b100011001 || bin == 0b100010001|| bin == 0b100001001 )
-    {
-      if(breakcount>1)
-      {
-        ledVerdeOn();
-        Serial.println("Parando ESQUERDA");
-        Refdir = 0.001;
-        Refesq = 0.001;
-        delay(30);
-        noInterrupts();
-        while(1);
-      }
-      else
-        breakcount++;
-    }
-    else
-      breakcount=0;
-  #endif
-
-  // logica para fim da pista NA DIREITA, aparenta estar com erros
-  #if PARADIREITA
-    if(bin == 0b110011000 || bin == 0b110010000|| bin == 0b110001000)
-    {  
-      if(breakcount>1)
-      {
-        ledVerdeOn();
-        Serial.println("Parando DIREITA");
-        Serial.print(bin,BIN); 
-        Refdir = 0.001;
-        Refesq = 0.001;
-        delay(30);
-        noInterrupts();
-        while(1);
-      }
-      else
-        breakcount++;
-    }
-    else
-      breakcount=0;
-  #endif
-
-  //if(contagem==25)
-  //{
-    contagem=0;
-    Serial.print("BIN,ERRO,REF,BK:");
-    Serial.print(bin,BIN);  
-    Serial.print(",");  
-    Serial.print(erro);
-    Serial.print(",");
-    Serial.print(Refdir);
-    Serial.print(",");
-    Serial.print(Refesq);
-    Serial.print(",");
-    Serial.println(breakcount);
-
-    //logica para acelerar ma linha reta
-    if(erro == 0.0)
-      {
-        teste++;
-      }
-    else
-      teste = 0.0;
-    if((erro==0.0 && vel_media<=vel_max) && digitalRead(chave1) && (teste >= 24.0))
-      vel_media += 0.005;
-  //}
-
-  delay(3);
-  contagem++;
-  erroPassado = erro;
-  
+  delay(100);  
 }
 
 ///////////////////////////////////////////////////////////funcoes//////////////////////////////////////////////////////////////////////////////
@@ -329,6 +238,10 @@ ISR(TIMER1_COMPA_vect){
   pulsosDir = 0;
   pulsosEsq = 0;
 
-  controlDIR = controlaDir(Refesq, wdir, controlDIR);
-  controlESQ = controlaEsq(Refdir, wesq, controlESQ);
+  float u_esq = controle_esq.update(Refesq, wesq);
+  float u_dir = controle_dir.update(Refdir, wdir);
+
+  dForward((int)floor(u_dir*51));
+  eForward((int)floor(u_esq*51));
+
 }
