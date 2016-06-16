@@ -10,6 +10,7 @@
 #define umin 0.0
 #define umax 5.0
 
+
 //Modelo Esquerdo
 //float kpesq = (4.86*(500/255)), t1esq = (1.06/3), tetaesq = .02;
 
@@ -19,6 +20,7 @@
 class Controller {
     float erro_k1 = 0, u_k1 = 0, ui_k1 = 0;
     float kc, ti, td, ts;
+    float taw, eaw_k1 =0;
   public:
     
     Controller(float kc, float ti, float td, float ts)
@@ -27,25 +29,31 @@ class Controller {
       this->ti = ti;
       this->td = td;
       this->ts = ts;
+      this->taw = ti;
     }
 
     float update (float setpoint, float current_value)
     /* Returns control output */
     {
-      float erro,up,ui,ud;
+      float erro,up,ui,ud, u_total, u_sat;
       erro = setpoint - current_value;
       up = kc*erro;                           //termo proporcional
       ui = ui_k1 + ((kc*ts)/ti)*erro_k1;      //termo integral
       ud = ((kc*td)/ts)*(erro - erro_k1);     //termo derivativo
+      ui= ui + (taw)*eaw_k1;               //termo anti windup
+
+
+
+      u_total = up + ui + ud;
       
-      float u_total = up + ui + ud;
-      
-      u_total = min(umax,max(u_total,umin)); //saturação
+      u_sat = min(umax,max(u_total,umin)); //saturação
+
+      eaw_k1 = u_sat - u_total; // erro de saturação
 
       erro_k1 = erro;
       ui_k1 = ui;
 
-      return u_total;
+      return u_sat;
     }
 };
 

@@ -136,8 +136,8 @@ void setup()
   readCalibBlack(caliBlack); 
 
 
-  Refdir = 0.1;
-  Refesq = 0.1;
+  Refdir = 2.0;
+  Refesq = 1.0;
   delay(4000);
 }
 
@@ -233,8 +233,8 @@ float calculaRef(char lado, float error){
 // interrupcao para TIMER1, periodo de amostragem para controle de velocidade 
 ISR(TIMER1_COMPA_vect){
   // Calculo das velocidades dos motores
-  wdir = (((float(pulsosDir))/3200.0)*freq*pi);
-  wesq = (((float(pulsosEsq))/3200.0)*freq*pi);
+  wesq = (((float(pulsosDir))/3200.0)*freq*pi);
+  wdir = (((float(pulsosEsq))/3200.0)*freq*pi);
   pulsosDir = 0;
   pulsosEsq = 0;
 

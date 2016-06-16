@@ -1,10 +1,10 @@
 
-int esq_f = 8;
-int esq_t = 7;
-int dir_f = 6;
-int dir_t = 10;
-int dir = 5;
-int esq = 9;
+int dir_f = 8;
+int dir_t = 7;
+int esq_f = 6;
+int esq_t = 10;
+int esq = 5;
+int dir = 9;
 
 #define sat(x) (abs(x) > 200 ? (200) : abs(x))
 
