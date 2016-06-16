@@ -1,0 +1,49 @@
+-------------------------------------------------------------------------------------
+Relação dos Cabos
+-------------------------------------------------------------------------------------
+
+*************************************************************************************
+Motor/Encoder
+*************************************************************************************
+Preto - Alimentação (-)
+Vermelho - Alimentação (+)
+Azul - Alimentação Encoder (5V)
+Verde - Alimentação Encoder (GND)
+Amarelo - Output 1 Encoder
+Branco - Output 2 Encoder
+
+************************************************************************************
+Placa Arduino
+************************************************************************************
+Pino	-	Descrição
+21	-	Encoder (2) Esquerdo
+20	-	Encoder (1) Esquerdo
+19	-	Encoder (2) Direito
+18	-	Encoder (1) Direito
+10	-	Motor Esquerdo Frente
+6	-	Motor Esquerdo Trás
+7	-	Motor Direito Frente
+8	-	Motor Direito Trás
+4	-	Aciona os leds da placa de sensores (cabo vermelho)
+9	-	Enable Motor Direito
+5	-	Enable Motor Esquerdo
+A0	-	Sensores PB - Flat cable marcado de PRETO
+A1	-	Sensores PB - Flat cable sequencial
+A2	-	   "     " -   "    "        "
+A3	-	   "     " -   "    "        "
+A4	-	   "     " -   "    "        "
+A5	-	   "     " -   "    "        "
+A6	-	   "     " -   "    "        "
+A7	-	   "     " -   "    "        "
+A8	-	Sensor PB - Cabo branco
+
+
+*************************************************************************************
+Driver l298
+*************************************************************************************
+
+Vin - 12V da bateria, com diodo e fusível de proteção
+Out1 e Out2 - Motor esquerdo
+Out3 e Out4 - Motor direito
+EnA, In1 e In2 - Controle motor esquerdo
+EnB, In3 e In4 - Controle motor direito
