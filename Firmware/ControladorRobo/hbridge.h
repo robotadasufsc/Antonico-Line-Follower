@@ -1,4 +1,3 @@
-
 int dir_f = 8;
 int dir_t = 7;
 int esq_f = 6;
@@ -14,6 +13,26 @@ float curva = 0;
 float curva_fechada = 2;
 float esquerda=1;
 float direita=1.1;
+
+
+void hBridgeSetup(){
+  // Define os pinos do acionamento da ponte H  como saida
+  pinMode(esq_f, OUTPUT);
+  pinMode(esq_t, OUTPUT);
+  pinMode(esq, OUTPUT);
+  pinMode(dir_f, OUTPUT);
+  pinMode(dir_t, OUTPUT);
+  pinMode(dir, OUTPUT);  
+
+    //inicia com motores desligados
+  digitalWrite(esq_t,LOW);         
+  digitalWrite(dir_t,LOW);
+  digitalWrite(esq_f,LOW);         
+  digitalWrite(dir_f,LOW);
+
+
+}
+
 
 // frente  esquerda
 void eForward(int vel)
@@ -100,53 +119,3 @@ void acuteLeft()
   analogWrite(esq,sat(vel_max*curva_fechada));         
   analogWrite(dir,sat(vel_max)); 
 }
-
-
-/** Felippe board
-void goForward(float erro)
-{
-  int erroInt = (int)erro;
-  
-  digitalWrite(esq_t,LOW);         
-  digitalWrite(dir_t,LOW);
-  digitalWrite(esq_f,HIGH);         
-  digitalWrite(dir_f,HIGH);
-  
-  delay(1);
-  
-  analogWrite(dir,sat(vel_max+erroInt));
-  analogWrite(esq,sat(vel_max-erroInt)); 
-}
-void turnRight()
-{
-  analogWrite(esq_t,0);         
-  analogWrite(dir_t,0);  
-  analogWrite(esq_f,sat(vel_max));
-  analogWrite(dir_f,sat(vel_max*curva)); 
-}
-void turnLeft()
-{
-  analogWrite(esq_t,0);         
-  analogWrite(dir_t,0);
-  analogWrite(esq_f,sat(vel_max*curva));
-  analogWrite(dir_f,sat(vel_max)); 
-}
-// fira em torno do próprio eixo, se tornou mais promissor em curvas muito fechadas !
-
-void acuteRight(float valor)
-{
-  analogWrite(esq_t,0);         
-  analogWrite(dir_t,sat(vel_max*curva_fechada));  
-  analogWrite(esq_f,sat(vel_max));
-  analogWrite(dir_f,0); 
-}
-
-void acuteLeft(float valor)
-{
-  analogWrite(esq_t,sat(vel_max*curva_fechada));         
-  analogWrite(dir_t,0);
-  analogWrite(esq_f,0);
-  analogWrite(dir_f,sat(vel_max)); 
-}
-**/
-
