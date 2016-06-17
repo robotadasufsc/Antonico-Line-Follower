@@ -1,13 +1,19 @@
 // pinos para leitura analógica
-const int sensorPin[]={A0,A1,A2,A3,A4,A5,A6,A7,A8};
+const int sensorPin[]={A0,A1,A2,A3,A8,A4,A5,A6,A7};
 // eeprom address for the sensors
 int addr=0;
+byte sensorLow[9] = {0}
+byte sensorHigh[9] = {1024};
+int sensorRaw[9] = {0};
+int sensor[9] = {0};
+
 
 // le os sensores e salva o valor lido de cada um no byte[9]
-void readSensors(byte* sVec)
+void readSensors()
 {
   for(int i=0;i<9;i++)
-      sVec[i] = analogRead(sensorPin[i]);
+      sensorRaw[i] = analogRead(sensorPin[i]);
+      sensor[i] = map(sensorRaw[i], sensorLow[i], sensorHigh[i], 0, 255);
 }
 
 // escreve os valores de sVec na eeprom para os endereços do branco
