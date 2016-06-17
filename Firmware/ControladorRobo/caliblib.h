@@ -4,6 +4,8 @@ const int sensorPin[]= {A0,A1,A2,A3,A8,A4,A5,A6,A7};
 int addr=0;
 byte sensorLow[9] = {0};
 byte sensorHigh[9] = {1024};
+byte sensorLow[9] = {0}
+byte sensorHigh[9] = {1024};
 int sensorRaw[9] = {0};
 int sensor[9] = {0};
 
