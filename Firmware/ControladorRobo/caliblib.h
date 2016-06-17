@@ -2,9 +2,8 @@
 const int sensorPin[]= {A0,A1,A2,A3,A8,A4,A5,A6,A7};
 // eeprom address for the sensors
 int addr=0;
+
 byte sensorLow[9] = {0};
-byte sensorHigh[9] = {1024};
-byte sensorLow[9] = {0}
 byte sensorHigh[9] = {1024};
 int sensorRaw[9] = {0};
 int sensor[9] = {0};
@@ -13,9 +12,21 @@ int sensor[9] = {0};
 // le os sensores e salva o valor lido de cada um no byte[9]
 void readSensors()
 {
-    for (int i=0; i<9; i++)
+    for(int i=0;i<9;i++)
+    {
         sensorRaw[i] = analogRead(sensorPin[i]);
-    sensor[i] = map(sensorRaw[i], sensorLow[i], sensorHigh[i], 0, 255);
+        sensor[i] = map(sensorRaw[i], sensorLow[i], sensorHigh[i], 0, 255);
+    }
+}
+
+void calibSensors()
+{
+    for(int i=0;i<9;i++)
+    {
+       sensorRaw[i] = analogRead(sensorPin[i]);
+       sensorLow[i] = min(sensorLow[i],sensorRaw[i]); 
+       sensorHigh[i] = max(sensorLow[i],sensorRaw[i]);   
+    }
 }
 
 // escreve os valores de sVec na eeprom para os endereços do branco
