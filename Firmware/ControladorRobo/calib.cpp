@@ -24,6 +24,12 @@ Calib::Calib()
     m_calibrating = false;
 }
 
+Calib& Calib::self()
+{
+    static Calib self;
+    return self;
+}
+
 void Calib::saveCalibToEEPROM()
 {
     for (uint16_t i = CALLIB_ADDRESS; i<CALLIB_ADDRESS + NUMBER_OF_SENSORS; i++)
