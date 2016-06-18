@@ -31,95 +31,44 @@ void hBridgeSetup()
     digitalWrite(esq_f,LOW);
     digitalWrite(dir_f,LOW);
 
-
 }
 
 
 // frente  esquerda
-void eForward(int vel)
+void setLeftWheel(int vel)
 {
-    digitalWrite(esq_t,LOW);
-    digitalWrite(esq_f,HIGH);
+    vel = max(min(vel,255),-255);
+    if (vel<0)
+    {
+        digitalWrite(esq_t,HIGH);
+        digitalWrite(esq_f,LOW);    
+    
+    }
+    else
+    {
+        digitalWrite(esq_t,LOW);
+        digitalWrite(esq_f,HIGH);    
+    }
     analogWrite(esq,sat(vel));
-
 }
 
-void dForward(int vel)
+void setRightWheel(int vel)
 {
-    digitalWrite(dir_f,HIGH);
-    digitalWrite(dir_t,LOW);
+    vel = max(min(vel,255),-255);
+    if (vel<0)
+    {
+        digitalWrite(dir_f,LOW);
+        digitalWrite(dir_t,HIGH);
+    }else
+    {
+        digitalWrite(dir_f,HIGH);
+        digitalWrite(dir_t,LOW);
+    }
     analogWrite(dir,sat(vel));
 }
 
 void goForward(int vel)
 {
-    // frente
-    digitalWrite(esq_t,LOW);
-    digitalWrite(dir_t,LOW);
-    digitalWrite(esq_f,HIGH);
-    digitalWrite(dir_f,HIGH);
-
-    analogWrite(dir,vel);
-    analogWrite(esq,vel);
-
-}
-void giraEsquerda()
-{
-    digitalWrite(dir_t,LOW);
-    digitalWrite(dir_f,HIGH);
-    digitalWrite(esq_t,HIGH);
-    digitalWrite(esq_f,LOW);
-    analogWrite(dir,vel_max);
-    analogWrite(esq,vel_max);
-}
-void giraDireita()
-{
-    digitalWrite(dir_t,HIGH);
-    digitalWrite(dir_f,LOW);
-    digitalWrite(esq_t,LOW);
-    digitalWrite(esq_f,HIGH);
-
-    analogWrite(dir,vel_max);
-    analogWrite(esq,vel_max);
-}
-void turnRight()
-{
-    digitalWrite(esq_t,LOW);
-    digitalWrite(dir_t,LOW);
-    digitalWrite(esq_f,HIGH);
-    digitalWrite(dir_f,HIGH);
-
-    analogWrite(esq,sat(vel_max));
-    analogWrite(dir,sat(vel_max*curva));
-}
-void turnLeft()
-{
-    digitalWrite(esq_t,LOW);
-    digitalWrite(dir_t,LOW);
-    digitalWrite(esq_f,HIGH);
-    digitalWrite(dir_f,HIGH);
-    analogWrite(esq_f,sat(vel_max*curva));
-    analogWrite(dir_f,sat(vel_max));
-}
-
-// vira em torno do próprio eixo, se tornou mais promissor em curvas muito fechadas !
-void acuteRight()
-{
-    digitalWrite(dir_t,HIGH);
-    digitalWrite(esq_t,LOW);
-    digitalWrite(dir_f,LOW);
-    digitalWrite(esq_f,HIGH);
-
-    analogWrite(dir,sat(vel_max*curva_fechada));
-    analogWrite(esq,sat(vel_max));
-}
-
-void acuteLeft()
-{
-    digitalWrite(dir_t,LOW);
-    digitalWrite(esq_t,HIGH);
-    digitalWrite(dir_f,HIGH);
-    digitalWrite(esq_f,LOW);
-    analogWrite(esq,sat(vel_max*curva_fechada));
-    analogWrite(dir,sat(vel_max));
+    eForward(vel);
+    dForward(vel);
 }

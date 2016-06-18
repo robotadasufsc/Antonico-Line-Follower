@@ -105,7 +105,7 @@ ISR(TIMER1_COMPA_vect){
     float u_esq = controle_esq.update(refEsq, wEsq);
     float u_dir = controle_dir.update(refDir, wDir);
 
-    dForward((int)floor(u_dir*51));
-    eForward((int)floor(u_esq*51));
+    setRightWheel((int)floor(u_dir*51));
+    setLeftWheel((int)floor(u_esq*51));
 
 }
