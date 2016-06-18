@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Arduino.h>
 
 // Passar parte da eeprom para um outra classe
