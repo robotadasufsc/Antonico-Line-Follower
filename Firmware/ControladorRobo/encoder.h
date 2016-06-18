@@ -1,8 +1,8 @@
 int pulsosDir = 0;
 int pulsosEsq = 0;
 
-float wesq = 0;
-float wdir = 0;
+float wEsq = 0;
+float wDir = 0;
 // Funcao para contagem dos pulsos do encoder esquerdo
 void incrementaEsquerdo()
 {

@@ -33,38 +33,54 @@
 float refDir = 0.0;
 float refEsq = 0.0;
 
+// posicao angular de cada roda, com provavel perda de resolucao depois de algum tempo.
+float posEsq = 0;
+float posDir = 0;
+
+long calibrationTimer = 0;
 //----------------------------------
 
 
 // funcoes
+void peripheralsSetup(){
+    // Seta os pinos de chave como entrada em pull-up
+    pinMode(CHAVE1, INPUT_PULLUP);
+    pinMode(CHAVE2, INPUT_PULLUP);
+    Serial.begin(115200); 
+    // aciona os leds infravermelho dos sensores
+    digitalWrite(4,HIGH);  
+}
 
 void setup()
 {
-  pinMode(CHAVE1, INPUT_PULLUP);
-  pinMode(CHAVE2, INPUT_PULLUP);
+    // initialize serial communications at 9600 bps:
 
-  // initialize serial communications at 9600 bps:
-  Serial.begin(115200); 
-  // aciona os sensores
-  digitalWrite(4,HIGH);  
-  // Seta os pinos de chave como entrada em pull-up
+    hBridgeSetup();
 
-  hBridgeSetup();
+    encoderSetup();
 
-  encoderSetup();
+    controllersSetup();
+     
+    if(digitalRead(CHAVE1))
+    {   
+        calibrationTimer = millis()+4000; //CALCULAR OU MEDIR O TEMPO DE UMA VOLTA
+        startCalibration();
+        while(millis()<calibrationTimer)
+        {
+            readSensors();
+        }
+        endCalibration();
+    }
 
-  controllersSetup();
-   
 
-  refDir = 1.0;
-  refEsq = 1.0;
-  delay(4000);
+    refDir = 1.0;
+    refEsq = 1.0;
+    delay(4000);
 }
 
 void loop() 
 { 
-
-  delay(100);  
+    delay(100);  
 }
 
 ///////////////////////////////////////////////////////////funcoes//////////////////////////////////////////////////////////////////////////////
@@ -72,16 +88,24 @@ void loop()
 
 // interrupcao para TIMER1, periodo de amostragem para controle de velocidade 
 ISR(TIMER1_COMPA_vect){
-  // Calculo das velocidades dos motores
-  wesq = (((float(pulsosDir))/3200.0)*freq*pi);
-  wdir = (((float(pulsosEsq))/3200.0)*freq*pi);
-  pulsosDir = 0;
-  pulsosEsq = 0;
+    // Calculo das velocidades dos motores
 
-  float u_esq = controle_esq.update(refEsq, wesq);
-  float u_dir = controle_dir.update(refDir, wdir);
+    float arcRight = ((float(pulsosDir))/3200.0)*pi; 
+    float arcLeft =  ((float(pulsosEsq))/3200.0)*pi; 
+    
+    wEsq = arcLeft*freq;
+    wDir = arcRight*freq;
+    
+    posDir+=arcRight;
+    posEsq+=arcLeft;
 
-  dForward((int)floor(u_dir*51));
-  eForward((int)floor(u_esq*51));
+    pulsosDir = 0;
+    pulsosEsq = 0;
+
+    float u_esq = controle_esq.update(refEsq, wEsq);
+    float u_dir = controle_dir.update(refDir, wDir);
+
+    dForward((int)floor(u_dir*51));
+    eForward((int)floor(u_esq*51));
 
 }
