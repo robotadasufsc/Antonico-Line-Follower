@@ -52,9 +52,7 @@ void peripheralsSetup(){
 
 void setup()
 {
-    // initialize serial communications at 9600 bps:
-
-    hBridgeSetup();
+    HBridge::self();
 
     encoderSetup();
 
@@ -104,7 +102,7 @@ ISR(TIMER1_COMPA_vect){
     float u_esq = controle_esq.update(refEsq, wEsq);
     float u_dir = controle_dir.update(refDir, wDir);
 
-    setRightWheel((int)floor(u_dir*51));
-    setLeftWheel((int)floor(u_esq*51));
+    HBridge::self().setWheelPWM(LEFT_WHEEL,(int)floor(u_dir*51));
+    HBridge::self().setWheelPWM(RIGHT_WHEEL,(int)floor(u_esq*51));
 
 }
