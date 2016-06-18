@@ -1,6 +1,5 @@
 #include <Arduino.h>
-#include <EEPROM.h>
-#include "caliblib.h"
+#include "calib.h"
 #include "hbridge.h"
 #include "controle.h"
 #include "encoder.h"
@@ -46,9 +45,9 @@ void peripheralsSetup(){
     // Seta os pinos de chave como entrada em pull-up
     pinMode(CHAVE1, INPUT_PULLUP);
     pinMode(CHAVE2, INPUT_PULLUP);
-    Serial.begin(115200); 
+    Serial.begin(115200);
     // aciona os leds infravermelho dos sensores
-    digitalWrite(4,HIGH);  
+    digitalWrite(4,HIGH);
 }
 
 void setup()
@@ -60,16 +59,16 @@ void setup()
     encoderSetup();
 
     controllersSetup();
-     
+
     if(digitalRead(CHAVE1))
-    {   
+    {
         calibrationTimer = millis()+4000; //CALCULAR OU MEDIR O TEMPO DE UMA VOLTA
-        startCalibration();
+        Calib::self().startCalibration();
         while(millis()<calibrationTimer)
         {
-            readSensors();
+            Calib::self().startCalibration();
         }
-        endCalibration();
+        Calib::self().endCalibration();
     }
 
 
@@ -78,24 +77,24 @@ void setup()
     delay(4000);
 }
 
-void loop() 
-{ 
-    delay(100);  
+void loop()
+{
+    delay(100);
 }
 
 ///////////////////////////////////////////////////////////funcoes//////////////////////////////////////////////////////////////////////////////
 
 
-// interrupcao para TIMER1, periodo de amostragem para controle de velocidade 
+// interrupcao para TIMER1, periodo de amostragem para controle de velocidade
 ISR(TIMER1_COMPA_vect){
     // Calculo das velocidades dos motores
 
-    float arcRight = ((float(pulsosDir))/3200.0)*pi; 
-    float arcLeft =  ((float(pulsosEsq))/3200.0)*pi; 
-    
+    float arcRight = ((float(pulsosDir))/3200.0)*pi;
+    float arcLeft =  ((float(pulsosEsq))/3200.0)*pi;
+
     wEsq = arcLeft*freq;
     wDir = arcRight*freq;
-    
+
     posDir+=arcRight;
     posEsq+=arcLeft;
 
