@@ -14,7 +14,7 @@ private:
 
 public:
     static HBridge& self();
-    enum {LEFT_WHEEL, RIGHT_WHEEL};
+    enum {LEFT, RIGHT};
 
 
     void setWheelPWM(uint8_t wheel, int16_t speed);

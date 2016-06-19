@@ -42,7 +42,7 @@ void setup()
     if(digitalRead(SWITCH1))
     {
         IRArray* infrared = &IRArray::self();
-        calibrationTimer = millis()+4000; //CALCULAR OU MEDIR O TEMPO DE UMA VOLTA
+        calibrationTimer = millis()+4000; //TODO: medir uma volta completa.
         infrared->startCalibration();
         while(millis()<calibrationTimer)
         {
@@ -83,7 +83,7 @@ ISR(TIMER1_COMPA_vect){
     float u_dir = controle_dir.update(refDir, wDir);
     
     HBridge* bridge = &HBridge::self();
-    bridge->setWheelPWM(bridge->LEFT_WHEEL,(int)floor(u_dir*51));
-    bridge->setWheelPWM(bridge->RIGHT_WHEEL,(int)floor(u_esq*51));
+    bridge->setWheelPWM(bridge->LEFT,(int)floor(u_dir*51));
+    bridge->setWheelPWM(bridge->RIGHT,(int)floor(u_esq*51));
 
 }
