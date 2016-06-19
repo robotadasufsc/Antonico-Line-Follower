@@ -4,8 +4,6 @@
 #include "controle.h"
 #include "encoder.h"
 
-//DOIDJERA ABSOLUTA
-#define analogRead(x) (analogRead(x)/4.0)
 
 // constantes
 #define freq 50.0
