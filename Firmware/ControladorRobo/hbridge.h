@@ -1,3 +1,4 @@
+#pragma once
 #include "hal.h"
 
 #define sat(x) (max(min(x,255),-255))
