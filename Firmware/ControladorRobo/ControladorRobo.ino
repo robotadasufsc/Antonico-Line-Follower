@@ -1,14 +1,13 @@
 #include <Arduino.h>
+#include <math.h>
 #include "hal.h"
 #include "calib.h"
 #include "hbridge.h"
 #include "controle.h"
 #include "encoder.h"
 
-
 // constantes
 #define freq 50.0
-#define pi 3.1415
 
 //variaveis para controle de velocidade
 float refDir = 0.0;
@@ -68,8 +67,8 @@ void loop()
 ISR(TIMER1_COMPA_vect){
     // Calculo das velocidades dos motores
 
-    float arcRight = ((float(pulsosDir))/3200.0)*pi;
-    float arcLeft =  ((float(pulsosEsq))/3200.0)*pi;
+    float arcRight = ((float(pulsosDir))/3200.0)*M_PI;
+    float arcLeft =  ((float(pulsosEsq))/3200.0)*M_PI;
 
     wEsq = arcLeft*freq;
     wDir = arcRight*freq;
