@@ -1,8 +1,8 @@
-#include "calib.h"
+#include "irarray.h"
 #include <EEPROM.h>
 
 // pinos para leitura analógica
-uint16_t Calib::m_sensorPin[NUMBER_OF_SENSORS] =
+uint16_t IRArray::m_sensorPin[NUMBER_OF_SENSORS] =
 {
     A0,
     A1,
@@ -15,7 +15,7 @@ uint16_t Calib::m_sensorPin[NUMBER_OF_SENSORS] =
     A7,
 };
 
-Calib::Calib()
+IRArray::IRArray()
 {
     memset(m_sensorLow, 0, sizeof(m_sensorLow));
     memset(m_sensorHigh, 255, sizeof(m_sensorHigh));
@@ -24,13 +24,13 @@ Calib::Calib()
     m_calibrating = false;
 }
 
-Calib& Calib::self()
+IRArray& IRArray::self()
 {
-    static Calib self;
+    static IRArray self;
     return self;
 }
 
-void Calib::saveCalibToEEPROM()
+void IRArray::saveCalibrationToEEPROM()
 {
     for (uint16_t i = CALLIB_ADDRESS; i<CALLIB_ADDRESS + NUMBER_OF_SENSORS; i++)
     {
@@ -40,7 +40,7 @@ void Calib::saveCalibToEEPROM()
 }
 
 // le os valores do branco da eeprom
-void Calib::loadCalibFromEEPROM()
+void IRArray::loadCalibrationFromEEPROM()
 {
     for (uint16_t i = CALLIB_ADDRESS; i<CALLIB_ADDRESS + NUMBER_OF_SENSORS; i++)
     {
@@ -50,17 +50,17 @@ void Calib::loadCalibFromEEPROM()
 }
 
 
-void Calib::startCalibration()
+void IRArray::startCalibration()
 {
     m_calibrating = true;
 }
 
-void Calib::endCalibration(){
+void IRArray::endCalibration(){
     m_calibrating = false;
-    saveCalibToEEPROM();
+    saveCalibrationToEEPROM();
 }
 
-void Calib::readSensors()
+void IRArray::readSensors()
 {
     for(int i = 0; i < NUMBER_OF_SENSORS; i++)
     {

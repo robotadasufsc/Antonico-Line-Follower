@@ -8,15 +8,15 @@
 
 #define NUMBER_OF_SENSORS 9
 
-class Calib
+class IRArray
 {
 private:
-    Calib& operator = (Calib& other) = delete;
-    Calib(const Calib& other) = delete;
-    Calib();
+    IRArray& operator = (IRArray& other) = delete;
+    IRArray(const IRArray& other) = delete;
+    IRArray();
 
-    void saveCalibToEEPROM();
-    void loadCalibFromEEPROM();
+    void saveCalibrationToEEPROM();
+    void loadCalibrationFromEEPROM();
 
     // pinos para leitura analógica
     static uint16_t m_sensorPin[NUMBER_OF_SENSORS];
@@ -29,7 +29,7 @@ private:
     bool m_calibrating;
 
 public:
-    static Calib& self();
+    static IRArray& self();
 
     void startCalibration();
     void endCalibration();

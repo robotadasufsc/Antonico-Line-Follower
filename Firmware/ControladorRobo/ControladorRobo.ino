@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <math.h>
 #include "hal.h"
-#include "calib.h"
+#include "irarray.h"
 #include "hbridge.h"
 #include "controle.h"
 #include "encoder.h"
@@ -41,14 +41,14 @@ void setup()
 
     if(digitalRead(SWITCH1))
     {
-        Calib* calib = &Calib::self();
+        IRArray* infrared = &IRArray::self();
         calibrationTimer = millis()+4000; //CALCULAR OU MEDIR O TEMPO DE UMA VOLTA
-        calib->startCalibration();
+        infrared->startCalibration();
         while(millis()<calibrationTimer)
         {
-            calib->startCalibration();
+            infrared->startCalibration();
         }
-        calib->endCalibration();
+        infrared->endCalibration();
     }
     refDir = 1.0;
     refEsq = 1.0;
