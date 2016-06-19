@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "hal.h"
 #include "calib.h"
 #include "hbridge.h"
 #include "controle.h"
@@ -8,23 +9,6 @@
 // constantes
 #define freq 50.0
 #define pi 3.1415
-
-
-// pinos de interface
-#define ledVerde        22
-#define ledAmarelo      23
-#define CHAVE1 52
-#define CHAVE2 53
-
-
-#define ledVerdeOff()      digitalWrite(ledVerde, HIGH)
-#define ledVerdeOn()       digitalWrite(ledVerde, LOW)
-#define ledVerdeToggle()   digitalWrite(ledVerde, !digitalRead(ledVerde))
-#define ledAmareloOff()    digitalWrite(ledAmarelo, HIGH)
-#define ledAmareloOn()     digitalWrite(ledAmarelo, LOW)
-#define ledAmareloToggle() digitalWrite(ledAmarelo, !digitalRead(ledAmarelo))
-
-
 
 //variaveis para controle de velocidade
 float refDir = 0.0;
@@ -41,8 +25,8 @@ long calibrationTimer = 0;
 // funcoes
 void peripheralsSetup(){
     // Seta os pinos de chave como entrada em pull-up
-    pinMode(CHAVE1, INPUT_PULLUP);
-    pinMode(CHAVE2, INPUT_PULLUP);
+    pinMode(SWITCH1, INPUT_PULLUP);
+    pinMode(SWITCH2, INPUT_PULLUP);
     Serial.begin(115200);
     // aciona os leds infravermelho dos sensores
     digitalWrite(4,HIGH);
@@ -56,7 +40,7 @@ void setup()
 
     controllersSetup();
 
-    if(digitalRead(CHAVE1))
+    if(digitalRead(SWITCH1))
     {
         calibrationTimer = millis()+4000; //CALCULAR OU MEDIR O TEMPO DE UMA VOLTA
         Calib::self().startCalibration();

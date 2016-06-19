@@ -55,3 +55,28 @@
 |     2560                ____________/    52=B1  53=B0     52=SCK  53=SS
 \_______________________/
 */
+
+//LED PINS
+#define GREENLED 22
+#define YELLOWLED 23
+
+//SWITCH PINS
+#define SWITCH1 52
+#define SWITCH2 53
+
+//LED Control
+#define greenLedOff()      digitalWrite(GREENLED, HIGH)
+#define greenLedOn()       digitalWrite(GREENLED, LOW)
+#define greenLedToggle()   digitalWrite(GREENLED, !digitalRead(GREENLED))
+#define yellowLedOff()    digitalWrite(YELLOWLED, HIGH)
+#define yellowLedOn()     digitalWrite(YELLOWLED, LOW)
+#define yellowLedToggle() digitalWrite(YELLOWLED, !digitalRead(YELLOWLED))
+
+//// H-Bridge Pins
+#define RIGHT_WHEEL_FORWARD_PIN 8
+#define RIGHT_WHEEL_BACKWARD_PIN 7
+#define RIGHT_WHEEL_SPEED_PIN 9
+
+#define LEFT_WHEEL_FORWARD_PIN 6
+#define LEFT_WHEEL_BACKWARD_PIN 10
+#define LEFT_WHEEL_SPEED_PIN 5
