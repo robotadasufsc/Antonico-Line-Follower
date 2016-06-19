@@ -42,16 +42,15 @@ void setup()
 
     if(digitalRead(SWITCH1))
     {
+        Calib* calib = &Calib::self();
         calibrationTimer = millis()+4000; //CALCULAR OU MEDIR O TEMPO DE UMA VOLTA
-        Calib::self().startCalibration();
+        calib->startCalibration();
         while(millis()<calibrationTimer)
         {
-            Calib::self().startCalibration();
+            calib->startCalibration();
         }
-        Calib::self().endCalibration();
+        calib->endCalibration();
     }
-
-
     refDir = 1.0;
     refEsq = 1.0;
     delay(4000);
@@ -83,8 +82,9 @@ ISR(TIMER1_COMPA_vect){
 
     float u_esq = controle_esq.update(refEsq, wEsq);
     float u_dir = controle_dir.update(refDir, wDir);
-
-    HBridge::self().setWheelPWM(LEFT_WHEEL,(int)floor(u_dir*51));
-    HBridge::self().setWheelPWM(RIGHT_WHEEL,(int)floor(u_esq*51));
+    
+    HBridge* bridge = &HBridge::self();
+    bridge->setWheelPWM(bridge->LEFT_WHEEL,(int)floor(u_dir*51));
+    bridge->setWheelPWM(bridge->RIGHT_WHEEL,(int)floor(u_esq*51));
 
 }
