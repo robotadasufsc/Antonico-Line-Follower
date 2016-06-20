@@ -28,8 +28,6 @@ void peripheralsSetup()
     pinMode(SWITCH1, INPUT_PULLUP);
     pinMode(SWITCH2, INPUT_PULLUP);
     Serial.begin(115200);
-    // aciona os leds infravermelho dos sensores
-    digitalWrite(4,HIGH);
 }
 
 void setup()
