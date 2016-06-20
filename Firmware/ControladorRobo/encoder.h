@@ -1,3 +1,7 @@
+#pragma once
+
+#include <Arduino.h>
+
 int pulsosDir = 0;
 int pulsosEsq = 0;
 
