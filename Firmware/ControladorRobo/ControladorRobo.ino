@@ -6,6 +6,17 @@
 #include "controle.h"
 #include "encoder.h"
 
+#define CONTROLADOR_ROBO_DEBUG
+
+// If CONTROLADOR_ROBO_DEBUG define print debug message
+#ifdef CONTROLADOR_ROBO_DEBUG
+char debug_buffer[128];
+// [Class]: Function:Line: %s
+#define debug(fmt, args ...)  do {sprintf(debug_buffer, "[ControladorRobo]: %s:%d: " fmt "\n", __FUNCTION__, __LINE__, ## args); Serial.print(debug_buffer);} while(0)
+#else
+#define debug(fmt, args ...)
+#endif
+
 // constantes
 #define freq 50.0
 
@@ -30,6 +41,7 @@ void peripheralsSetup()
 
 void setup()
 {
+    long unsigned int startTime = millis();
     peripheralsSetup();
 
     HBridge::self();
@@ -52,6 +64,8 @@ void setup()
     refDir = 1.0;
     refEsq = 1.0;
     delay(4000);
+
+    debug("Took %d millis to finish.", millis()-startTime);
 }
 
 void loop()
