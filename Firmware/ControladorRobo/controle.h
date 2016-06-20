@@ -78,5 +78,3 @@ public:
 
 Controller controle_esq = Controller(kc_esq, ti_esq, td_esq, Ts);
 Controller controle_dir = Controller(kc_dir, ti_dir, td_dir, Ts);
-
-

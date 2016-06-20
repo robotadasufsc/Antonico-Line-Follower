@@ -22,7 +22,8 @@ long calibrationTimer = 0;
 
 
 // funcoes
-void peripheralsSetup(){
+void peripheralsSetup()
+{
     // Seta os pinos de chave como entrada em pull-up
     pinMode(SWITCH1, INPUT_PULLUP);
     pinMode(SWITCH2, INPUT_PULLUP);
@@ -39,12 +40,12 @@ void setup()
 
     controllersSetup();
 
-    if(digitalRead(SWITCH1))
+    if (digitalRead(SWITCH1))
     {
         IRArray* infrared = &IRArray::self();
         calibrationTimer = millis()+4000; //TODO: medir uma volta completa.
         infrared->startCalibration();
-        while(millis()<calibrationTimer)
+        while (millis()<calibrationTimer)
         {
             infrared->startCalibration();
         }
@@ -64,11 +65,12 @@ void loop()
 
 
 // interrupcao para TIMER1, periodo de amostragem para controle de velocidade
-ISR(TIMER1_COMPA_vect){
+ISR(TIMER1_COMPA_vect)
+{
     // Calculo das velocidades dos motores
 
     float arcRight = ((float(pulsosDir))/3200.0)*M_PI;
-    float arcLeft =  ((float(pulsosEsq))/3200.0)*M_PI;
+    float arcLeft = ((float(pulsosEsq))/3200.0)*M_PI;
 
     wEsq = arcLeft*freq;
     wDir = arcRight*freq;
@@ -81,7 +83,7 @@ ISR(TIMER1_COMPA_vect){
 
     float u_esq = controle_esq.update(refEsq, wEsq);
     float u_dir = controle_dir.update(refDir, wDir);
-    
+
     HBridge* bridge = &HBridge::self();
     bridge->setWheelPWM(bridge->LEFT,(int)floor(u_dir*51));
     bridge->setWheelPWM(bridge->RIGHT,(int)floor(u_esq*51));

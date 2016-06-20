@@ -55,18 +55,19 @@ void IRArray::startCalibration()
     m_calibrating = true;
 }
 
-void IRArray::endCalibration(){
+void IRArray::endCalibration()
+{
     m_calibrating = false;
     saveCalibrationToEEPROM();
 }
 
 void IRArray::readSensors()
 {
-    for(int i = 0; i < NUMBER_OF_SENSORS; i++)
+    for (int i = 0; i < NUMBER_OF_SENSORS; i++)
     {
         m_sensorRaw[i] = analogRead(m_sensorPin[i]);
         byte sensorRawByte = m_sensorRaw[i]>>2;
-        if(m_calibrating)
+        if (m_calibrating)
         {
             m_sensorLow[i] = min(m_sensorLow[i], sensorRawByte);
             m_sensorHigh[i] = max(m_sensorHigh[i], sensorRawByte);
