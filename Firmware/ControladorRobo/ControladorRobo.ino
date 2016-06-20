@@ -16,8 +16,6 @@ float refEsq = 0.0;
 // posicao angular de cada roda, com provavel perda de resolucao depois de algum tempo.
 float posEsq = 0;
 float posDir = 0;
-
-long calibrationTimer = 0;
 //----------------------------------
 
 
@@ -41,7 +39,7 @@ void setup()
     if (digitalRead(SWITCH1))
     {
         IRArray* infrared = &IRArray::self();
-        calibrationTimer = millis()+4000; //TODO: medir uma volta completa.
+        long unsigned int calibrationTimer = millis()+4000; //TODO: medir uma volta completa.
         infrared->startCalibration();
         while (millis()<calibrationTimer)
         {
