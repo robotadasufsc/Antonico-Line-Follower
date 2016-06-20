@@ -1,7 +1,7 @@
 #include "irarray.h"
 #include <EEPROM.h>
 
-// pinos para leitura analógica
+//TODO: this need to be in hal
 uint16_t IRArray::m_sensorPin[NUMBER_OF_SENSORS] =
 {
     A0,
@@ -17,6 +17,10 @@ uint16_t IRArray::m_sensorPin[NUMBER_OF_SENSORS] =
 
 IRArray::IRArray()
 {
+    //TODO: this need to be in hal
+    m_enablePin = 4;
+    pinMode(m_enablePin, OUTPUT);
+
     memset(m_sensorLow, 0, sizeof(m_sensorLow));
     memset(m_sensorHigh, 255, sizeof(m_sensorHigh));
     memset(m_sensorRaw, 0, sizeof(m_sensorRaw));
@@ -55,22 +59,35 @@ void IRArray::startCalibration()
     m_calibrating = true;
 }
 
-void IRArray::endCalibration(){
+void IRArray::endCalibration()
+{
     m_calibrating = false;
     saveCalibrationToEEPROM();
 }
 
 void IRArray::readSensors()
 {
-    for(int i = 0; i < NUMBER_OF_SENSORS; i++)
+    for (int i = 0; i < NUMBER_OF_SENSORS; i++)
     {
         m_sensorRaw[i] = analogRead(m_sensorPin[i]);
         byte sensorRawByte = m_sensorRaw[i]>>2;
-        if(m_calibrating)
+        if (m_calibrating)
         {
             m_sensorLow[i] = min(m_sensorLow[i], sensorRawByte);
             m_sensorHigh[i] = max(m_sensorHigh[i], sensorRawByte);
         }
         m_sensor[i] = map(sensorRawByte, m_sensorLow[i], m_sensorHigh[i], 0, 255);
     }
+}
+
+bool IRArray::turnOn()
+{
+    digitalWrite(m_enablePin, HIGH);
+    return digitalRead(m_enablePin);
+}
+
+bool IRArray::turnOff()
+{
+    digitalWrite(m_enablePin, LOW);
+    return !digitalRead(m_enablePin);
 }

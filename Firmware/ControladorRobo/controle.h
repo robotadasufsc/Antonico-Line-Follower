@@ -1,3 +1,7 @@
+#pragma once
+
+#include <Arduino.h>
+
 #define kc_dir 15.0
 #define ti_dir 0.2
 #define td_dir 0
@@ -78,5 +82,3 @@ public:
 
 Controller controle_esq = Controller(kc_esq, ti_esq, td_esq, Ts);
 Controller controle_dir = Controller(kc_dir, ti_dir, td_dir, Ts);
-
-

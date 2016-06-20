@@ -20,6 +20,3 @@ public:
     void setWheelPWM(uint8_t wheel, int16_t speed);
     void forward(int16_t vel);
 };
-
-
-

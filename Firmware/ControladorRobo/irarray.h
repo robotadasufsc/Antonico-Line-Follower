@@ -22,6 +22,7 @@ private:
     static uint16_t m_sensorPin[NUMBER_OF_SENSORS];
     byte m_sensorLow[NUMBER_OF_SENSORS];
     byte m_sensorHigh[NUMBER_OF_SENSORS];
+    byte m_enablePin;
     uint16_t m_sensorRaw[NUMBER_OF_SENSORS];
     uint16_t m_sensor[NUMBER_OF_SENSORS];
 
@@ -34,4 +35,6 @@ public:
     void startCalibration();
     void endCalibration();
     void readSensors();
+    bool turnOn();
+    bool turnOff();
 };
