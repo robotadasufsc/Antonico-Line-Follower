@@ -30,6 +30,8 @@ void peripheralsSetup()
 
 void setup()
 {
+    peripheralsSetup();
+
     HBridge::self();
 
     encoderSetup();
