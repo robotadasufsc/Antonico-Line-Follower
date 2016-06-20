@@ -1,3 +1,7 @@
+#pragma once
+
+#include <Arduino.h>
+
 #define kc_dir 15.0
 #define ti_dir 0.2
 #define td_dir 0
