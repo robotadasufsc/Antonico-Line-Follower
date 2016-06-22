@@ -54,7 +54,7 @@ void HBridge::setWheelPWM(uint8_t wheel, int16_t speed)
         digitalWrite(pin_f,LOW);
         digitalWrite(pin_b,HIGH);
     }
-    analogWrite(pin_s, speed);
+    analogWrite(pin_s, abs(speed));
 }
 
 void HBridge::forward(int16_t vel)
