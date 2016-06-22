@@ -2,11 +2,11 @@
 
 #include <Arduino.h>
 
-#define kc_dir 15.0
+#define kc_dir 5.0
 #define ti_dir 0.2
 #define td_dir 0
 
-#define kc_esq 15.0
+#define kc_esq 5.0
 #define ti_esq 0.2
 #define td_esq 0
 
