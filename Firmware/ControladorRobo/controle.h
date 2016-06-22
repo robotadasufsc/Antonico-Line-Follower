@@ -11,7 +11,7 @@
 #define td_esq 0
 
 #define Ts 0.02
-#define umin 0.0
+#define umin -5.0
 #define umax 5.0
 
 
