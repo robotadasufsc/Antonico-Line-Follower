@@ -46,7 +46,7 @@ void setup()
     long unsigned int startTime = millis();
     peripheralsSetup();
 
-    HBridge::self();
+    HBridge::self(); // makes sure that the H-ridge pins are initialized during setup phase.
 
     controllersSetup();
 
