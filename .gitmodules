@@ -1,0 +1,3 @@
+[submodule "Firmware/ControladorRobo/lib/Encoder"]
+	path = Firmware/ControladorRobo/lib/Encoder
+	url = https://github.com/PaulStoffregen/Encoder.git
