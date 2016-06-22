@@ -50,11 +50,13 @@ void setup()
 
     controllersSetup();
 
-    if (digitalRead(SWITCH1))
+    if (digitalRead(SWITCH2))
     {
         IRArray* infrared = &IRArray::self();
         long unsigned int calibrationTimer = millis()+4000; //TODO: medir uma volta completa.
         infrared->startCalibration();
+        refDir = 1;
+        refEsq = -1;
         while (millis()<calibrationTimer)
         {
             infrared->startCalibration();
