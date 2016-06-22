@@ -80,3 +80,12 @@
 #define LEFT_WHEEL_FORWARD_PIN 6
 #define LEFT_WHEEL_BACKWARD_PIN 10
 #define LEFT_WHEEL_SPEED_PIN 5
+
+// Encoder
+#define RIGHT_ENCODER_A 21
+#define RIGHT_ENCODER_B 20  // B is out of phase by 90 degrees
+
+#define LEFT_ENCODER_A 18
+#define LEFT_ENCODER_B 19 // B is out of phase by 90 degrees
+
+#define ENCODER_RESOLUTION 3200

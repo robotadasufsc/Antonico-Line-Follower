@@ -4,7 +4,7 @@
 #include "irarray.h"
 #include "hbridge.h"
 #include "controle.h"
-#include "encoder.h"
+#include "lib/Encoder/Encoder.h"
 
 #define CONTROLADOR_ROBO_DEBUG
 
@@ -25,12 +25,14 @@ float refDir = 0.0;
 float refEsq = 0.0;
 
 // posicao angular de cada roda, com provavel perda de resolucao depois de algum tempo.
-float posEsq = 0;
-float posDir = 0;
-//----------------------------------
+// será usada para controle de posicao do robô (girar 90º, por exemplo)
+float leftAngPos = 0;
+float rightAngPos = 0;
 
+// Encoders setup
+Encoder left(LEFT_ENCODER_A, LEFT_ENCODER_B);
+Encoder right(RIGHT_ENCODER_A,RIGHT_ENCODER_B);
 
-// funcoes
 void peripheralsSetup()
 {
     // Seta os pinos de chave como entrada em pull-up
@@ -45,8 +47,6 @@ void setup()
     peripheralsSetup();
 
     HBridge::self();
-
-    encoderSetup();
 
     controllersSetup();
 
@@ -81,23 +81,23 @@ ISR(TIMER1_COMPA_vect)
 {
     // Calculo das velocidades dos motores
 
-    float arcRight = ((float(pulsosDir))/3200.0)*M_PI;
-    float arcLeft = ((float(pulsosEsq))/3200.0)*M_PI;
+    float rightAngularDelta = ((float)right.read()/ENCODER_RESOLUTION)*M_PI;
+    float leftAngularDelta = ((float)left.read()/ENCODER_RESOLUTION)*M_PI;
 
-    wEsq = arcLeft*freq;
-    wDir = arcRight*freq;
+    float rightAngularSpeed = rightAngularDelta*freq;
+    float leftAngularSpeed = leftAngularDelta*freq;
 
-    posDir+=arcRight;
-    posEsq+=arcLeft;
+    rightAngPos += rightAngularDelta;
+    leftAngPos += leftAngularDelta;
 
-    pulsosDir = 0;
-    pulsosEsq = 0;
+    left.write(0);
+    right.write(0);
 
-    float u_esq = controle_esq.update(refEsq, wEsq);
-    float u_dir = controle_dir.update(refDir, wDir);
+    float u_esq = controle_esq.update(refEsq, leftAngularSpeed);
+    float u_dir = controle_dir.update(refDir, rightAngularSpeed);
 
     HBridge* bridge = &HBridge::self();
-    bridge->setWheelPWM(bridge->LEFT,(int)floor(u_dir*51));
-    bridge->setWheelPWM(bridge->RIGHT,(int)floor(u_esq*51));
+    bridge->setWheelPWM(bridge->LEFT,(int)floor(u_esq*51));
+    bridge->setWheelPWM(bridge->RIGHT,(int)floor(u_dir*51));
 
 }
