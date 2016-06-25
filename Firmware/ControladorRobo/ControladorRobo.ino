@@ -3,7 +3,7 @@
 #include "hal.h"
 #include "irarray.h"
 #include "hbridge.h"
-#include "controle.h"
+#include "control.h"
 #include "lib/Encoder/Encoder.h"
 
 #define CONTROLADOR_ROBO_DEBUG
