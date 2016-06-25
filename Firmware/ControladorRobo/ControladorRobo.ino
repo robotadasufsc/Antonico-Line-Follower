@@ -1,137 +1,110 @@
 #include <Arduino.h>
-#include <EEPROM.h>
-#include "caliblib.h"
+#include <math.h>
+#include "hal.h"
+#include "irarray.h"
 #include "hbridge.h"
-#include "controle.h"
-#include "encoder.h"
+#include "control.h"
+#include "lib/Encoder/Encoder.h"
 
-//DOIDJERA ABSOLUTA
-#define analogRead(x) (analogRead(x)/4.0)
+#define CONTROLADOR_ROBO_DEBUG
+
+// If CONTROLADOR_ROBO_DEBUG define print debug message
+#ifdef CONTROLADOR_ROBO_DEBUG
+char debug_buffer[128];
+// [Class]: Function:Line: %s
+#define debug(fmt, args ...)  do {sprintf(debug_buffer, "[ControladorRobo]: %s:%d: " fmt "\n", __FUNCTION__, __LINE__, ## args); Serial.print(debug_buffer);} while(0)
+#else
+#define debug(fmt, args ...)
+#endif
 
 // constantes
 #define freq 50.0
-#define pi 3.1415
-
-// pinos de interface
-#define ledVerde        22
-#define ledAmarelo      23
-#define ledVerdeOff()   digitalWrite(ledVerde, HIGH)
-#define ledVerdeOn()    digitalWrite(ledVerde, LOW)
-#define ledVerdeToggle() digitalWrite(ledVerde, !digitalRead(ledVerde))
-#define ledAmareloOff()  digitalWrite(ledAmarelo, HIGH)
-#define ledAmareloOn()   digitalWrite(ledAmarelo, LOW)
-#define ledAmareloToggle() digitalWrite(ledAmarelo, !digitalRead(ledAmarelo))
-
-//vetores para leitura da linha
-float sVecFloat[9]={0};
-byte sVecByte[9]={0};
-byte sVecByteBlack[9]={0};
-byte sVecByteWhite[9]={0};
-
-
-//pesos para implementacao de logica
-byte pesos[]={1,8,15,20};
-//byte pesos[]={1,11,17,22};
-//variavel para logica de retorno do robo a pista quando se perde
-float erroPassado = 0.0;
-//variavel para criar laço mais lento dentro do loop
-int contagem=0;
-byte breakcount=0;
-
- int sensores[] = {0, 1, 2, 3, 4, 9, 5 ,6 ,7 ,8};
 
 //variaveis para controle de velocidade
-float Refdir = 0.0;
-float Refesq = 0.0;
+float refDir = 0.0;
+float refEsq = 0.0;
 
+// posicao angular de cada roda, com provavel perda de resolucao depois de algum tempo.
+// será usada para controle de posicao do robô (girar 90º, por exemplo)
+float leftAngPos = 0;
+float rightAngPos = 0;
 
-//----------------------------------
+// Encoders setup
+Encoder left(LEFT_ENCODER_A, LEFT_ENCODER_B);
+Encoder right(RIGHT_ENCODER_A,RIGHT_ENCODER_B);
 
-//pinos para chaveamento do controle
-int chave1 = 52;
-int chave2 = 53;
+// PID controllers setup
+Controller controle_esq = Controller(kc_esq, ti_esq, td_esq, Ts);
+Controller controle_dir = Controller(kc_dir, ti_dir, td_dir, Ts);
 
-// funcoes
-void leituraFloat(float* sVec);
-int leituraBin();//For Arduino Mega: (tested on Arduino Mega 2560)
-float calculaRef(char lado, float error);
+void peripheralsSetup()
+{
+    // Seta os pinos de chave como entrada em pull-up
+    pinMode(SWITCH1, INPUT_PULLUP);
+    pinMode(SWITCH2, INPUT_PULLUP);
+    Serial.begin(115200);
+}
 
 void setup()
 {
-  // initialize serial communications at 9600 bps:
-  Serial.begin(115200); 
-  // aciona os sensores
-  digitalWrite(4,HIGH);  
-  // Seta os pinos de chave como entrada em pull-up
-  pinMode(chave1, INPUT_PULLUP);
-  pinMode(chave2, INPUT_PULLUP);
-  if(digitalRead(chave2)){
-  }
+    long unsigned int startTime = millis();
+    peripheralsSetup();
 
-  hBridgeSetup();
+    HBridge::self(); // makes sure that the H-ridge pins are initialized during setup phase.
 
-  encoderSetup();
+    controllersSetup();
 
-  controllersSetup();
-    
-  //leitura de valores de calibracao salvos na EEPROM
-  readCalibWhite(caliWhite); 
-  readCalibBlack(caliBlack); 
+    if (digitalRead(SWITCH2))
+    {
+        IRArray* infrared = &IRArray::self();
+        long unsigned int calibrationTimer = millis()+4000; //TODO: medir uma volta completa.
+        infrared->startCalibration();
+        refDir = 1;
+        refEsq = -1;
+        while (millis()<calibrationTimer)
+        {
+            infrared->startCalibration();
+            infrared->readSensors();
+        }
+        infrared->endCalibration();
+    }
+    refDir = 1.0;
+    refEsq = 1.0;
+    delay(4000);
 
-
-  Refdir = 2.0;
-  Refesq = 1.0;
-  delay(4000);
+    debug("Took %d millis to finish.", millis()-startTime);
 }
 
-void loop() 
-{ 
-
-  delay(100);  
+void loop()
+{
+    delay(100);
 }
 
 ///////////////////////////////////////////////////////////funcoes//////////////////////////////////////////////////////////////////////////////
 
 
-void leituraFloat(float* sVec){
-  for(int i=0;i<9;i++)
-      sVec[i] = ((float)analogRead(sensorPin[i]))/caliWhite[i];
-}
+// interrupcao para TIMER1, periodo de amostragem para controle de velocidade
+ISR(TIMER1_COMPA_vect)
+{
+    // Calculo das velocidades dos motores
 
-//retorna os 8 bits do array de sensores
-int leituraBin(){ 
- 
-  //ate 8 para a linha dos sensores, ate 9 para ler o da frente
-  for(int sensor: sensores){
-      Serial.println(sensor);
-  }
-  
-}
+    float rightAngularDelta = ((float)right.read()/ENCODER_RESOLUTION)*M_PI;
+    float leftAngularDelta = ((float)left.read()/ENCODER_RESOLUTION)*M_PI;
 
-//retorna os 8 bits do array + sensor da frente
-int leituraBin2(){
-  int sVec=0;
-  //ate 8 para a linha dos sensores, ate 9 para ler o da frente
-  for(int i=0;i<9;i++){
-     if(((float)((float)(analogRead(sensorPin[i]))/(float)(caliWhite[i])))<((float)(caliWhite[i]+caliBlack[i])/(2.0*(caliWhite[i]))))
-      sVec+=1<<i;     
-  }
-  return sVec;
-}
+    float rightAngularSpeed = rightAngularDelta*freq;
+    float leftAngularSpeed = leftAngularDelta*freq;
 
-// interrupcao para TIMER1, periodo de amostragem para controle de velocidade 
-ISR(TIMER1_COMPA_vect){
-  // Calculo das velocidades dos motores
-  wesq = (((float(pulsosDir))/3200.0)*freq*pi);
-  wdir = (((float(pulsosEsq))/3200.0)*freq*pi);
-  pulsosDir = 0;
-  pulsosEsq = 0;
+    rightAngPos += rightAngularDelta;
+    leftAngPos += leftAngularDelta;
 
-  float u_esq = controle_esq.update(Refesq, wesq);
-  float u_dir = controle_dir.update(Refdir, wdir);
+    left.write(0);
+    right.write(0);
 
-  Serial.println(u_dir);
-  dForward((int)floor(u_dir*51));
-  eForward((int)floor(u_esq*51));
+    float u_esq = controle_esq.update(refEsq, leftAngularSpeed);
+    float u_dir = controle_dir.update(refDir, rightAngularSpeed);
+
+    HBridge* bridge = &HBridge::self();
+    bridge->setWheelPWM(bridge->LEFT,u_esq);
+    bridge->setWheelPWM(bridge->RIGHT,u_dir);
 
 }
