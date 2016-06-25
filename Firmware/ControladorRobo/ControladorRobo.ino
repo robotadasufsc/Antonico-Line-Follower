@@ -103,7 +103,7 @@ ISR(TIMER1_COMPA_vect)
     float u_dir = controle_dir.update(refDir, rightAngularSpeed);
 
     HBridge* bridge = &HBridge::self();
-    bridge->setWheelPWM(bridge->LEFT,(int)floor(u_esq*51));
-    bridge->setWheelPWM(bridge->RIGHT,(int)floor(u_dir*51));
+    bridge->setWheelPWM(bridge->LEFT,u_esq);
+    bridge->setWheelPWM(bridge->RIGHT,u_dir);
 
 }

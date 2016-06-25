@@ -1,5 +1,5 @@
 #include "hbridge.h"
-
+#define sat(x, a, b) ( max( min (x, a), b ))
 
 HBridge::HBridge()
 {
@@ -25,8 +25,10 @@ HBridge& HBridge::self()
     return self;
 }
 
-void HBridge::setWheelPWM(uint8_t wheel, int16_t speed)
+void HBridge::setWheelPWM(uint8_t wheel, float speed)
 {
+    speed = sat(speed,1,-1);
+    uint8_t PWM = (uint8_t)(float)(abs(speed)*255.0);
     uint8_t pin_f; //forward pin
     uint8_t pin_b; //backward pin
     uint8_t pin_s; //signal pin
@@ -54,7 +56,7 @@ void HBridge::setWheelPWM(uint8_t wheel, int16_t speed)
         digitalWrite(pin_f,LOW);
         digitalWrite(pin_b,HIGH);
     }
-    analogWrite(pin_s, abs(speed));
+    analogWrite(pin_s, PWM);
 }
 
 void HBridge::forward(int16_t vel)
