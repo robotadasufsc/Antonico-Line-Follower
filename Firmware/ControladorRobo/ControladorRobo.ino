@@ -64,6 +64,7 @@ void setup()
         while (millis()<calibrationTimer)
         {
             infrared->startCalibration();
+            infrared->readSensors();
         }
         infrared->endCalibration();
     }
