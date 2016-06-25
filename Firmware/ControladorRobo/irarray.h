@@ -37,4 +37,5 @@ public:
     void readSensors();
     bool turnOn();
     bool turnOff();
+    uint16_t* sensor(uint8_t i);
 };

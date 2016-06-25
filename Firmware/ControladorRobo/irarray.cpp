@@ -26,6 +26,7 @@ IRArray::IRArray()
     memset(m_sensorRaw, 0, sizeof(m_sensorRaw));
     memset(m_sensor, 0, sizeof(m_sensor));
     m_calibrating = false;
+    this->turnOn();
 }
 
 IRArray& IRArray::self()
@@ -77,6 +78,18 @@ void IRArray::readSensors()
             m_sensorHigh[i] = max(m_sensorHigh[i], sensorRawByte);
         }
         m_sensor[i] = map(sensorRawByte, m_sensorLow[i], m_sensorHigh[i], 0, 255);
+    }
+}
+
+uint16_t* IRArray::sensor(uint8_t i)
+{
+    if( i < sizeof(m_sensor))
+    {
+        return &m_sensor[i];
+    }
+    else
+    {
+        return nullptr;
     }
 }
 
