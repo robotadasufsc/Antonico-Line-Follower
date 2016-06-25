@@ -33,6 +33,10 @@ float rightAngPos = 0;
 Encoder left(LEFT_ENCODER_A, LEFT_ENCODER_B);
 Encoder right(RIGHT_ENCODER_A,RIGHT_ENCODER_B);
 
+// PID controllers setup
+Controller controle_esq = Controller(kc_esq, ti_esq, td_esq, Ts);
+Controller controle_dir = Controller(kc_dir, ti_dir, td_dir, Ts);
+
 void peripheralsSetup()
 {
     // Seta os pinos de chave como entrada em pull-up
