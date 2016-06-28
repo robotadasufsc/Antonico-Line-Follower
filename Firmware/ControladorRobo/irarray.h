@@ -37,5 +37,6 @@ public:
     void readSensors();
     bool turnOn();
     bool turnOff();
+    float estimateLinePosition();
     uint16_t* sensor(uint8_t i);
 };

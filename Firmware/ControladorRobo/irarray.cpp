@@ -93,6 +93,19 @@ uint16_t* IRArray::sensor(uint8_t i)
     }
 }
 
+float IRArray::estimateLinePosition()
+{
+    float sumOfMassXdistance = 0;
+    float sumOfMass=0;
+    int size = sizeof(m_sensor)/sizeof(m_sensor[0]);
+    for(int i=0;i<size;i++)
+    {
+      sumOfMass += m_sensor[i];
+      sumOfMassXdistance += m_sensor[i] *i;
+    }
+    return sumOfMassXdistance/sumOfMass;
+}
+
 bool IRArray::turnOn()
 {
     digitalWrite(m_enablePin, HIGH);
