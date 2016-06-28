@@ -51,6 +51,11 @@ void HBridge::setWheelPWM(uint8_t wheel, float speed)
         digitalWrite(pin_f,HIGH);
         digitalWrite(pin_b,LOW);
     }
+    else if(speed == 0)
+    {
+        digitalWrite(pin_f,HIGH);
+        digitalWrite(pin_b,HIGH);
+    }
     else
     {
         digitalWrite(pin_f,LOW);
