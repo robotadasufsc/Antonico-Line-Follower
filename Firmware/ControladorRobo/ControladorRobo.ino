@@ -57,7 +57,7 @@ void setup()
     if (digitalRead(SWITCH2))
     {
         IRArray* infrared = &IRArray::self();
-        long unsigned int calibrationTimer = millis()+4000; //TODO: medir uma volta completa.
+        long unsigned int calibrationTimer = millis()+2000; //TODO: Should use encoder data to measure a 360º turn.
         infrared->startCalibration();
         refDir = 1;
         refEsq = -1;
