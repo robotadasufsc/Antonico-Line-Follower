@@ -14,6 +14,7 @@ private:
     IRArray& operator = (IRArray& other) = delete;
     IRArray(const IRArray& other) = delete;
     IRArray();
+    float m_lastPosition;
 
     void saveCalibrationToEEPROM();
     void loadCalibrationFromEEPROM();

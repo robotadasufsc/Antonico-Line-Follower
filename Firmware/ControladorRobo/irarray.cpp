@@ -95,15 +95,24 @@ uint16_t* IRArray::sensor(uint8_t i)
 
 float IRArray::estimateLinePosition()
 {
+
     float sumOfMassXdistance = 0;
     float sumOfMass=0;
+    float maxValue = 0;
+
     int size = sizeof(m_sensor)/sizeof(m_sensor[0]);
     for(int i=0;i<size;i++)
     {
-      sumOfMass += m_sensor[i];
-      sumOfMassXdistance += m_sensor[i] *i;
+        sumOfMass += m_sensor[i];
+        sumOfMassXdistance += m_sensor[i] *i;
+        maxValue = max(m_sensor[i],maxValue);
+
     }
-    return sumOfMassXdistance/sumOfMass;
+    if (maxValue>150)
+    {
+        this->m_lastPosition = sumOfMassXdistance/sumOfMass;
+    }
+    return this->m_lastPosition;
 }
 
 bool IRArray::turnOn()
