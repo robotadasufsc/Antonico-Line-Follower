@@ -120,7 +120,7 @@ float IRArray::estimateLinePosition()
         maxValue = max(m_sensor[i],maxValue);
 
     }
-    if (maxValue>150)
+    if (maxValue > 200) //TODO: Should not be hardcoded
     {
         this->m_lastPosition = sumOfMassXdistance/sumOfMass;
     }
