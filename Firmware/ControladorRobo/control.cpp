@@ -44,7 +44,7 @@ float Controller::update(float setpoint, float current_value)
 
     u_total = up + ui + ud;
 
-    u_sat = min(umax, max(u_total, umin)); // saturation
+    u_sat = min(m_umax, max(u_total, m_umin)); // saturation
 
     eaw_k1 = u_sat - u_total; // saturation error
 

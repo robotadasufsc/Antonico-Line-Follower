@@ -8,6 +8,16 @@
 
 #define CONTROLADOR_ROBO_DEBUG
 
+#define KC_DIR 1.0
+#define TI_DIR 0.2
+#define TD_DIR 0
+
+#define KC_ESQ 1.0
+#define TI_ESQ 0.2
+#define TD_ESQ 0
+
+#define TS 0.02
+
 // If CONTROLADOR_ROBO_DEBUG define print debug message
 #ifdef CONTROLADOR_ROBO_DEBUG
 char debug_buffer[128];
@@ -36,8 +46,8 @@ Encoder left(LEFT_ENCODER_A, LEFT_ENCODER_B);
 Encoder right(RIGHT_ENCODER_A,RIGHT_ENCODER_B);
 
 // PID controllers setup
-Controller controle_esq = Controller(kc_esq, ti_esq, td_esq, Ts);
-Controller controle_dir = Controller(kc_dir, ti_dir, td_dir, Ts);
+Controller controle_esq = Controller(KC_ESQ, TI_ESQ, TD_ESQ, TS);
+Controller controle_dir = Controller(KC_DIR, TI_DIR, TD_DIR, TS);
 Controller directionController = Controller(0.1, 0, 0, 1/FREQ_ACT);
 
 void peripheralsSetup()
