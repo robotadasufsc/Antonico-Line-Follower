@@ -21,11 +21,11 @@ IRArray::IRArray()
     m_enablePin = 4;
     pinMode(m_enablePin, OUTPUT);
 
-    memset(m_sensorLow, 0, sizeof(m_sensorLow));
-    memset(m_sensorHigh, 255, sizeof(m_sensorHigh));
     memset(m_sensorRaw, 0, sizeof(m_sensorRaw));
     memset(m_sensor, 0, sizeof(m_sensor));
     m_calibrating = false;
+    this->loadCalibrationFromEEPROM();
+    this->turnOn();
 }
 
 IRArray& IRArray::self()
@@ -56,6 +56,8 @@ void IRArray::loadCalibrationFromEEPROM()
 
 void IRArray::startCalibration()
 {
+    memset(m_sensorLow, 0, sizeof(m_sensorLow));
+    memset(m_sensorHigh, 255, sizeof(m_sensorHigh));
     m_calibrating = true;
 }
 
@@ -70,14 +72,58 @@ void IRArray::readSensors()
     for (int i = 0; i < NUMBER_OF_SENSORS; i++)
     {
         m_sensorRaw[i] = analogRead(m_sensorPin[i]);
-        byte sensorRawByte = m_sensorRaw[i]>>2;
-        if (m_calibrating)
-        {
-            m_sensorLow[i] = min(m_sensorLow[i], sensorRawByte);
-            m_sensorHigh[i] = max(m_sensorHigh[i], sensorRawByte);
-        }
-        m_sensor[i] = map(sensorRawByte, m_sensorLow[i], m_sensorHigh[i], 0, 255);
+        byte sensorRawByte = (m_sensorRaw[i])>>2;
+        m_sensorLow[i] = min(m_sensorLow[i], sensorRawByte);
+        m_sensorHigh[i] = max(m_sensorHigh[i], sensorRawByte);
+        m_sensor[i] = (uint16_t) map(((float)sensorRawByte), (float)m_sensorLow[i], (float)m_sensorHigh[i], 0.0, 255.0);
     }
+}
+
+uint16_t IRArray::sensor(uint8_t i, uint8_t typ = 0)
+{
+    if( i < sizeof(m_sensor))
+    {
+        switch(typ)
+        {
+            case MAX:
+                return m_sensorHigh[i];
+            break;
+
+            case MIN:
+                return m_sensorLow[i];
+            break;
+
+            case NORMAL:
+            default:
+                 return m_sensor[i];
+            break;
+        }
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+float IRArray::estimateLinePosition()
+{
+
+    float sumOfMassXdistance = 0;
+    float sumOfMass=0;
+    float maxValue = 0;
+
+    for(int i = 0; i < NUMBER_OF_SENSORS; i++)
+    {
+        sumOfMass += m_sensor[i];
+        sumOfMassXdistance += m_sensor[i] *i;
+        maxValue = max(m_sensor[i],maxValue);
+
+    }
+    if (maxValue > 200) //TODO: Should not be hardcoded
+    {
+        this->m_lastPosition = sumOfMassXdistance/sumOfMass;
+    }
+    return this->m_lastPosition;
 }
 
 bool IRArray::turnOn()

@@ -17,6 +17,6 @@ public:
     enum {LEFT, RIGHT};
 
 
-    void setWheelPWM(uint8_t wheel, int16_t speed);
+    void setWheelPWM(uint8_t wheel, float speed);
     void forward(int16_t vel);
 };

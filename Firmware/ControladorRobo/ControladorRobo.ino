@@ -3,7 +3,7 @@
 #include "hal.h"
 #include "irarray.h"
 #include "hbridge.h"
-#include "controle.h"
+#include "control.h"
 #include "lib/Encoder/Encoder.h"
 
 #define CONTROLADOR_ROBO_DEBUG
@@ -19,10 +19,12 @@ char debug_buffer[128];
 
 // constantes
 #define freq 50.0
+#define actFreq 20
 
 //variaveis para controle de velocidade
 float refDir = 0.0;
 float refEsq = 0.0;
+float basespeed = 0.3;
 
 // posicao angular de cada roda, com provavel perda de resolucao depois de algum tempo.
 // será usada para controle de posicao do robô (girar 90º, por exemplo)
@@ -32,6 +34,11 @@ float rightAngPos = 0;
 // Encoders setup
 Encoder left(LEFT_ENCODER_A, LEFT_ENCODER_B);
 Encoder right(RIGHT_ENCODER_A,RIGHT_ENCODER_B);
+
+// PID controllers setup
+Controller controle_esq = Controller(kc_esq, ti_esq, td_esq, Ts);
+Controller controle_dir = Controller(kc_dir, ti_dir, td_dir, Ts);
+Controller directionController = Controller(0.1, 0, 0, 1/actFreq);
 
 void peripheralsSetup()
 {
@@ -53,26 +60,37 @@ void setup()
     if (digitalRead(SWITCH2))
     {
         IRArray* infrared = &IRArray::self();
-        long unsigned int calibrationTimer = millis()+4000; //TODO: medir uma volta completa.
+        long unsigned int calibrationTimer = millis()+2000; //TODO: Should use encoder data to measure a 360º turn.
         infrared->startCalibration();
         refDir = 1;
         refEsq = -1;
         while (millis()<calibrationTimer)
         {
             infrared->startCalibration();
+            infrared->readSensors();
         }
         infrared->endCalibration();
     }
-    refDir = 1.0;
-    refEsq = 1.0;
-    delay(4000);
+    refDir = 0;
+    refEsq = 0;
+    delay(100);
 
     debug("Took %d millis to finish.", millis()-startTime);
 }
 
 void loop()
 {
-    delay(100);
+    unsigned long nextCycle = millis() + 1000/freq;
+    IRArray* infrared = &IRArray::self();
+    while (millis() < nextCycle)
+    {
+    }
+    infrared->readSensors();
+    float currentLinePos = infrared->estimateLinePosition();
+    float u_direction = directionController.update(4.3, currentLinePos);
+    refDir = basespeed + u_direction;
+    refEsq = basespeed - u_direction;
+    basespeed *= 1.001;
 }
 
 ///////////////////////////////////////////////////////////funcoes//////////////////////////////////////////////////////////////////////////////
@@ -99,7 +117,7 @@ ISR(TIMER1_COMPA_vect)
     float u_dir = controle_dir.update(refDir, rightAngularSpeed);
 
     HBridge* bridge = &HBridge::self();
-    bridge->setWheelPWM(bridge->LEFT,(int)floor(u_esq*51));
-    bridge->setWheelPWM(bridge->RIGHT,(int)floor(u_dir*51));
+    bridge->setWheelPWM(bridge->LEFT,u_esq);
+    bridge->setWheelPWM(bridge->RIGHT,u_dir);
 
 }
