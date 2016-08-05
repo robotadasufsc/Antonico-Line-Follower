@@ -75,7 +75,7 @@ void IRArray::readSensors()
         byte sensorRawByte = (m_sensorRaw[i])>>2;
         m_sensorLow[i] = min(m_sensorLow[i], sensorRawByte);
         m_sensorHigh[i] = max(m_sensorHigh[i], sensorRawByte);
-        m_sensor[i] = map(sensorRawByte, m_sensorLow[i], m_sensorHigh[i], 0, 255);
+        m_sensor[i] = (uint16_t) map(((float)sensorRawByte), (float)m_sensorLow[i], (float)m_sensorHigh[i], 0.0, 255.0);
     }
 }
 
