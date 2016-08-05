@@ -18,8 +18,8 @@ char debug_buffer[128];
 #endif
 
 // constantes
-#define freq 50.0
-#define actFreq 20
+#define FREQ 50.0
+#define FREQ_ACT 20
 
 // variables for velocity control
 float refDir = 0.0;
@@ -38,7 +38,7 @@ Encoder right(RIGHT_ENCODER_A,RIGHT_ENCODER_B);
 // PID controllers setup
 Controller controle_esq = Controller(kc_esq, ti_esq, td_esq, Ts);
 Controller controle_dir = Controller(kc_dir, ti_dir, td_dir, Ts);
-Controller directionController = Controller(0.1, 0, 0, 1/actFreq);
+Controller directionController = Controller(0.1, 0, 0, 1/FREQ_ACT);
 
 void peripheralsSetup()
 {
@@ -80,7 +80,7 @@ void setup()
 
 void loop()
 {
-    unsigned long nextCycle = millis() + 1000/freq;
+    unsigned long nextCycle = millis() + 1000/FREQ;
     IRArray* infrared = &IRArray::self();
     while (millis() < nextCycle)
     {
@@ -100,8 +100,8 @@ ISR(TIMER1_COMPA_vect)
     float rightAngularDelta = ((float)right.read()/ENCODER_RESOLUTION)*M_PI;
     float leftAngularDelta = ((float)left.read()/ENCODER_RESOLUTION)*M_PI;
 
-    float rightAngularSpeed = rightAngularDelta*freq;
-    float leftAngularSpeed = leftAngularDelta*freq;
+    float rightAngularSpeed = rightAngularDelta*FREQ;
+    float leftAngularSpeed = leftAngularDelta*FREQ;
 
     rightAngPos += rightAngularDelta;
     leftAngPos += leftAngularDelta;
