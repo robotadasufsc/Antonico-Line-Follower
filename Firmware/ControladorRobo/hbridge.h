@@ -1,9 +1,6 @@
 #pragma once
 #include "hal.h"
 
-#define sat(x) (max(min(x,255),-255))
-
-
 class HBridge
 {
 private:
@@ -11,6 +8,7 @@ private:
     HBridge(const HBridge& other) = delete;
     HBridge();
 
+    inline float sat(float x, float min, float max);
 
 public:
     static HBridge& self();
