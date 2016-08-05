@@ -14,10 +14,10 @@
 #define umin -1.0
 #define umax 1.0
 
-//Modelo Esquerdo
+// Right model
 //float kpesq = (4.86*(500/255)), t1esq = (1.06/3), tetaesq = .02;
 
-//Modelo Direito
+// Left model
 //float kpdir = (5.15*(500/255)), t1dir = (0.8/3), tetadir = .02;
 void controllersSetup();
 
