@@ -1,7 +1,0 @@
-Estrutura sugerida
-
-Classes:
-	-VelocityController.h
-	-Sensors.h
-
-
