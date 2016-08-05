@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 
-// Passar parte da eeprom para um outra classe
+// TODO: create eeprom class
 // eeprom address for the sensors
 #define CALLIB_ADDRESS 0
 
@@ -21,7 +21,7 @@ private:
     void saveCalibrationToEEPROM();
     void loadCalibrationFromEEPROM();
 
-    // pinos para leitura analógica
+    // pins for analog read
     static uint16_t m_sensorPin[NUMBER_OF_SENSORS];
     uint8_t m_sensorLow[NUMBER_OF_SENSORS];
     uint8_t m_sensorHigh[NUMBER_OF_SENSORS];
@@ -29,7 +29,7 @@ private:
     uint16_t m_sensorRaw[NUMBER_OF_SENSORS];
     uint16_t m_sensor[NUMBER_OF_SENSORS];
 
-    // le os sensores e salva o valor lido de cada um no byte[9]
+    // run calibration routine
     bool m_calibrating;
 
 public:

@@ -43,7 +43,7 @@ void IRArray::saveCalibrationToEEPROM()
     }
 }
 
-// le os valores do branco da eeprom
+// read values from eeprom
 void IRArray::loadCalibrationFromEEPROM()
 {
     for (uint16_t i = CALLIB_ADDRESS; i<CALLIB_ADDRESS + NUMBER_OF_SENSORS; i++)

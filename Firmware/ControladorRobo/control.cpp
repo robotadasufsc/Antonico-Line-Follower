@@ -2,7 +2,7 @@
 
 void controllersSetup()
 {
-    //Interrupcao do TIMER1, aka periodo de amostragem para calculo do controle de velocidade
+    // TIMER1 interruption, sample time for velocity control
     TCCR1A = 0;
     TCCR1B = 0;
     TCNT1  = 0;
@@ -32,21 +32,21 @@ Controller::~Controller()
 {
 }
 
-float Controller::update(float setpoint, float current_value)
 /* Returns control output */
+float Controller::update(float setpoint, float current_value)
 {
     float erro,up,ui,ud, u_total, u_sat;
     erro = setpoint - current_value;
-    up = kc*erro;                           //termo proporcional
-    ui = ui_k1 + ((kc*ts)/ti)*erro_k1;      //termo integral
-    ud = ((kc*td)/ts)*(erro - erro_k1);     //termo derivativo
-    ui= ui + (taw)*eaw_k1;               //termo anti windup
+    up = kc*erro;                           // proporcional 
+    ui = ui_k1 + ((kc*ts)/ti)*erro_k1;      // integral
+    ud = ((kc*td)/ts)*(erro - erro_k1);     // derivative
+    ui = ui + (taw)*eaw_k1;                 // anti windup
 
     u_total = up + ui + ud;
 
-    u_sat = min(umax,max(u_total,umin)); //saturação
+    u_sat = min(umax, max(u_total, umin)); // saturation
 
-    eaw_k1 = u_sat - u_total; // erro de saturação
+    eaw_k1 = u_sat - u_total; // saturation error
 
     erro_k1 = erro;
     ui_k1 = ui;

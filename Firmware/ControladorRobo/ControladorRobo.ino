@@ -21,13 +21,13 @@ char debug_buffer[128];
 #define freq 50.0
 #define actFreq 20
 
-//variaveis para controle de velocidade
+// variables for velocity control
 float refDir = 0.0;
 float refEsq = 0.0;
 float basespeed = 0.3;
 
-// posicao angular de cada roda, com provavel perda de resolucao depois de algum tempo.
-// será usada para controle de posicao do robô (girar 90º, por exemplo)
+// angular position of each wheel, with loss of resolution after some time
+// will be used to know robot position
 float leftAngPos = 0;
 float rightAngPos = 0;
 
@@ -42,7 +42,7 @@ Controller directionController = Controller(0.1, 0, 0, 1/actFreq);
 
 void peripheralsSetup()
 {
-    // Seta os pinos de chave como entrada em pull-up
+    // Sets switch pins to PULLUP mode
     pinMode(SWITCH1, INPUT_PULLUP);
     pinMode(SWITCH2, INPUT_PULLUP);
     Serial.begin(115200);
@@ -93,14 +93,10 @@ void loop()
     basespeed *= 1.001;
 }
 
-///////////////////////////////////////////////////////////funcoes//////////////////////////////////////////////////////////////////////////////
-
-
-// interrupcao para TIMER1, periodo de amostragem para controle de velocidade
+// TIMER1 interruption, sample time for velocity control
 ISR(TIMER1_COMPA_vect)
 {
-    // Calculo das velocidades dos motores
-
+    // encoder ticks to angular velocity
     float rightAngularDelta = ((float)right.read()/ENCODER_RESOLUTION)*M_PI;
     float leftAngularDelta = ((float)left.read()/ENCODER_RESOLUTION)*M_PI;
 
