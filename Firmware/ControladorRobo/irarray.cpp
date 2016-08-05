@@ -79,15 +79,29 @@ void IRArray::readSensors()
     }
 }
 
-uint16_t* IRArray::sensor(uint8_t i)
+uint16_t IRArray::sensor(uint8_t i, uint8_t typ = 0)
 {
     if( i < sizeof(m_sensor))
     {
-        return &m_sensor[i];
+        switch(typ)
+        {
+            case MAX:
+                return m_sensorHigh[i];
+            break;
+
+            case MIN:
+                return m_sensorLow[i];
+            break;
+
+            case NORMAL:
+            default:
+                 return m_sensor[i];
+            break;
+        }
     }
     else
     {
-        return nullptr;
+        return 0;
     }
 }
 

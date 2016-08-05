@@ -33,11 +33,12 @@ private:
 public:
     static IRArray& self();
 
+    enum {NORMAL, MAX, MIN};
     void startCalibration();
     void endCalibration();
     void readSensors();
     bool turnOn();
     bool turnOff();
     float estimateLinePosition();
-    uint16_t* sensor(uint8_t i);
+    uint16_t sensor(uint8_t i, uint8_t typ);
 };
