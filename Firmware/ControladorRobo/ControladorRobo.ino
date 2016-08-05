@@ -8,6 +8,16 @@
 
 #define CONTROLADOR_ROBO_DEBUG
 
+#define KC_DIR 1.0
+#define TI_DIR 0.2
+#define TD_DIR 0
+
+#define KC_ESQ 1.0
+#define TI_ESQ 0.2
+#define TD_ESQ 0
+
+#define TS 0.02
+
 // If CONTROLADOR_ROBO_DEBUG define print debug message
 #ifdef CONTROLADOR_ROBO_DEBUG
 char debug_buffer[128];
@@ -18,8 +28,8 @@ char debug_buffer[128];
 #endif
 
 // constantes
-#define freq 50.0
-#define actFreq 20
+#define FREQ 50.0
+#define FREQ_ACT 20
 
 // variables for velocity control
 float refDir = 0.0;
@@ -36,15 +46,15 @@ Encoder left(LEFT_ENCODER_A, LEFT_ENCODER_B);
 Encoder right(RIGHT_ENCODER_A,RIGHT_ENCODER_B);
 
 // PID controllers setup
-Controller controle_esq = Controller(kc_esq, ti_esq, td_esq, Ts);
-Controller controle_dir = Controller(kc_dir, ti_dir, td_dir, Ts);
-Controller directionController = Controller(0.1, 0, 0, 1/actFreq);
+Controller controle_esq = Controller(KC_ESQ, TI_ESQ, TD_ESQ, TS);
+Controller controle_dir = Controller(KC_DIR, TI_DIR, TD_DIR, TS);
+Controller directionController = Controller(0.1, 0, 0, 1/FREQ_ACT);
 
 void peripheralsSetup()
 {
     // Sets switch pins to PULLUP mode
-    pinMode(SWITCH1, INPUT_PULLUP);
-    pinMode(SWITCH2, INPUT_PULLUP);
+    pinMode(SWITCH_1, INPUT_PULLUP);
+    pinMode(SWITCH_2, INPUT_PULLUP);
     Serial.begin(115200);
 }
 
@@ -57,7 +67,7 @@ void setup()
 
     controllersSetup();
 
-    if (digitalRead(SWITCH2))
+    if (digitalRead(SWITCH_2))
     {
         IRArray* infrared = &IRArray::self();
         long unsigned int calibrationTimer = millis()+2000; //TODO: Should use encoder data to measure a 360º turn.
@@ -80,7 +90,7 @@ void setup()
 
 void loop()
 {
-    unsigned long nextCycle = millis() + 1000/freq;
+    unsigned long nextCycle = millis() + 1000/FREQ;
     IRArray* infrared = &IRArray::self();
     while (millis() < nextCycle)
     {
@@ -100,8 +110,8 @@ ISR(TIMER1_COMPA_vect)
     float rightAngularDelta = ((float)right.read()/ENCODER_RESOLUTION)*M_PI;
     float leftAngularDelta = ((float)left.read()/ENCODER_RESOLUTION)*M_PI;
 
-    float rightAngularSpeed = rightAngularDelta*freq;
-    float leftAngularSpeed = leftAngularDelta*freq;
+    float rightAngularSpeed = rightAngularDelta*FREQ;
+    float leftAngularSpeed = leftAngularDelta*FREQ;
 
     rightAngPos += rightAngularDelta;
     leftAngPos += leftAngularDelta;

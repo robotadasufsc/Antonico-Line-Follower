@@ -2,18 +2,6 @@
 
 #include <Arduino.h>
 
-#define kc_dir 1.0
-#define ti_dir 0.2
-#define td_dir 0
-
-#define kc_esq 1.0
-#define ti_esq 0.2
-#define td_esq 0
-
-#define Ts 0.02
-#define umin -1.0
-#define umax 1.0
-
 // Right model
 //float kpesq = (4.86*(500/255)), t1esq = (1.06/3), tetaesq = .02;
 
@@ -27,6 +15,9 @@ private:
     float erro_k1 = 0, u_k1 = 0, ui_k1 = 0;
     float kc, ti, td, ts;
     float taw, eaw_k1 =0;
+
+    const float m_umax = 1.0;
+    const float m_umin = -1.0;
 
 public:
     Controller(float kc, float ti, float td, float ts);
