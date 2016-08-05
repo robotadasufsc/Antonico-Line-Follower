@@ -23,6 +23,7 @@ char debug_buffer[128];
 //variaveis para controle de velocidade
 float refDir = 0.0;
 float refEsq = 0.0;
+float basespeed = 0.3;
 
 // posicao angular de cada roda, com provavel perda de resolucao depois de algum tempo.
 // será usada para controle de posicao do robô (girar 90º, por exemplo)
@@ -36,6 +37,7 @@ Encoder right(RIGHT_ENCODER_A,RIGHT_ENCODER_B);
 // PID controllers setup
 Controller controle_esq = Controller(kc_esq, ti_esq, td_esq, Ts);
 Controller controle_dir = Controller(kc_dir, ti_dir, td_dir, Ts);
+Controller directionController = Controller(1,1000,0.0,0.1);
 
 void peripheralsSetup()
 {
@@ -68,16 +70,26 @@ void setup()
         }
         infrared->endCalibration();
     }
-    refDir = 1.0;
-    refEsq = 1.0;
-    delay(4000);
+    refDir = 0;
+    refEsq = 0;
+    delay(100);
 
     debug("Took %d millis to finish.", millis()-startTime);
 }
 
 void loop()
 {
-    delay(100);
+    unsigned long nextCycle = millis() + 100;
+    IRArray* infrared = &IRArray::self();
+    while (millis() < nextCycle)
+    {
+    }
+    infrared->readSensors();
+    float currentLinePos = infrared->estimateLinePosition();
+    float u_direction = directionController.update(4.3, currentLinePos);
+    refDir = basespeed + u_direction;
+    refEsq = basespeed - u_direction;
+    basespeed *= 1.001;
 }
 
 ///////////////////////////////////////////////////////////funcoes//////////////////////////////////////////////////////////////////////////////
