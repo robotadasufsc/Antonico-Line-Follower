@@ -8,6 +8,8 @@
 
 #define NUMBER_OF_SENSORS 9
 
+#define map(x, in_min, in_max, out_min, out_max) (((float)x - (float)in_min) * ((float)out_max - (float)out_min) / ((float)in_max - (float)in_min) + (float)out_min)
+
 class IRArray
 {
 private:
