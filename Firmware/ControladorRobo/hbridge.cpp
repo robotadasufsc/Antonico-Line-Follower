@@ -11,7 +11,7 @@ HBridge::HBridge()
     pinMode(RIGHT_WHEEL_BACKWARD_PIN, OUTPUT);
     pinMode(RIGHT_WHEEL_SPEED_PIN, OUTPUT);
 
-    //inicia com motores desligados
+    // start with motors off
     digitalWrite(LEFT_WHEEL_FORWARD_PIN,LOW);
     digitalWrite(LEFT_WHEEL_BACKWARD_PIN,LOW);
     digitalWrite(RIGHT_WHEEL_FORWARD_PIN,LOW);
@@ -29,9 +29,9 @@ void HBridge::setWheelPWM(uint8_t wheel, float speed)
 {
     speed = sat(speed,1,-1);
     uint8_t PWM = (uint8_t)(float)(abs(speed)*255.0);
-    uint8_t pin_f; //forward pin
-    uint8_t pin_b; //backward pin
-    uint8_t pin_s; //signal pin
+    uint8_t pin_f; // forward pin
+    uint8_t pin_b; // backward pin
+    uint8_t pin_s; // signal pin
     switch (wheel)
     {
     case LEFT:
