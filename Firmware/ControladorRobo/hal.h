@@ -57,20 +57,20 @@
 */
 
 //LED PINS
-#define GREENLED 22
-#define YELLOWLED 23
+#define GREEN_LED 22
+#define YELLOW_LED 23
 
 //SWITCH PINS
-#define SWITCH1 52
-#define SWITCH2 53
+#define SWITCH_1 52
+#define SWITCH_2 53
 
 //LED Control
-#define greenLedOff()      digitalWrite(GREENLED, HIGH)
-#define greenLedOn()       digitalWrite(GREENLED, LOW)
-#define greenLedToggle()   digitalWrite(GREENLED, !digitalRead(GREENLED))
-#define yellowLedOff()    digitalWrite(YELLOWLED, HIGH)
-#define yellowLedOn()     digitalWrite(YELLOWLED, LOW)
-#define yellowLedToggle() digitalWrite(YELLOWLED, !digitalRead(YELLOWLED))
+#define greenLedOff()      digitalWrite(GREEN_LED, HIGH)
+#define greenLedOn()       digitalWrite(GREEN_LED, LOW)
+#define greenLedToggle()   digitalWrite(GREEN_LED, !digitalRead(GREEN_LED))
+#define yellowLedOff()    digitalWrite(YELLOW_LED, HIGH)
+#define yellowLedOn()     digitalWrite(YELLOW_LED, LOW)
+#define yellowLedToggle() digitalWrite(YELLOW_LED, !digitalRead(YELLOW_LED))
 
 //// H-Bridge Pins
 #define RIGHT_WHEEL_FORWARD_PIN 8

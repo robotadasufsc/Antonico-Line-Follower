@@ -53,8 +53,8 @@ Controller directionController = Controller(0.1, 0, 0, 1/FREQ_ACT);
 void peripheralsSetup()
 {
     // Sets switch pins to PULLUP mode
-    pinMode(SWITCH1, INPUT_PULLUP);
-    pinMode(SWITCH2, INPUT_PULLUP);
+    pinMode(SWITCH_1, INPUT_PULLUP);
+    pinMode(SWITCH_2, INPUT_PULLUP);
     Serial.begin(115200);
 }
 
@@ -67,7 +67,7 @@ void setup()
 
     controllersSetup();
 
-    if (digitalRead(SWITCH2))
+    if (digitalRead(SWITCH_2))
     {
         IRArray* infrared = &IRArray::self();
         long unsigned int calibrationTimer = millis()+2000; //TODO: Should use encoder data to measure a 360º turn.
