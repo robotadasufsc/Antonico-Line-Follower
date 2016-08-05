@@ -1,5 +1,4 @@
 #include "hbridge.h"
-#define sat(x, a, b) ( max( min (x, a), b ))
 
 HBridge::HBridge()
 {
@@ -23,6 +22,11 @@ HBridge& HBridge::self()
 {
     static HBridge self;
     return self;
+}
+
+inline float HBridge::sat(float x, float min, float max)
+{
+    return max(min(x, min), max);
 }
 
 void HBridge::setWheelPWM(uint8_t wheel, float speed)
