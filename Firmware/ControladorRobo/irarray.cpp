@@ -72,12 +72,9 @@ void IRArray::readSensors()
     for (int i = 0; i < NUMBER_OF_SENSORS; i++)
     {
         m_sensorRaw[i] = analogRead(m_sensorPin[i]);
-        byte sensorRawByte = m_sensorRaw[i]>>2;
-        if (m_calibrating)
-        {
-            m_sensorLow[i] = min(m_sensorLow[i], sensorRawByte);
-            m_sensorHigh[i] = max(m_sensorHigh[i], sensorRawByte);
-        }
+        byte sensorRawByte = (m_sensorRaw[i])>>2;
+        m_sensorLow[i] = min(m_sensorLow[i], sensorRawByte);
+        m_sensorHigh[i] = max(m_sensorHigh[i], sensorRawByte);
         m_sensor[i] = map(sensorRawByte, m_sensorLow[i], m_sensorHigh[i], 0, 255);
     }
 }
