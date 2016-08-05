@@ -6,7 +6,7 @@
 #include "control.h"
 #include "lib/Encoder/Encoder.h"
 
-#define CONTROLADOR_ROBO_DEBUG
+#define MAINFIRMWARE_DEBUG
 
 #define KC_DIR 1.0
 #define TI_DIR 0.2
@@ -18,11 +18,12 @@
 
 #define TS 0.02
 
-// If CONTROLADOR_ROBO_DEBUG define print debug message
-#ifdef CONTROLADOR_ROBO_DEBUG
+// If MAINFIRMWARE_DEBUG define print debug message
+#ifdef MAINFIRMWARE_DEBUG
+
 char debug_buffer[128];
 // [Class]: Function:Line: %s
-#define debug(fmt, args ...)  do {sprintf(debug_buffer, "[ControladorRobo]: %s:%d: " fmt "\n", __FUNCTION__, __LINE__, ## args); Serial.print(debug_buffer);} while(0)
+#define debug(fmt, args ...)  do {sprintf(debug_buffer, "[mainfirmware]: %s:%d: " fmt "\n", __FUNCTION__, __LINE__, ## args); Serial.print(debug_buffer);} while(0)
 #else
 #define debug(fmt, args ...)
 #endif

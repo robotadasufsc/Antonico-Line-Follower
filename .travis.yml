@@ -9,4 +9,4 @@ before_install:
   - sudo mv arduino-1.6.9 /usr/local/share/arduino
   - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
 script:
-  - arduino --verify --board arduino:avr:mega:cpu=atmega2560 $PWD/Firmware/ControladorRobo/ControladorRobo.ino
+  - arduino --verify --board arduino:avr:mega:cpu=atmega2560 $PWD/Firmware/mainfirmware/mainfirmware.ino
