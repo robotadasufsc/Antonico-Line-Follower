@@ -112,8 +112,7 @@ float IRArray::estimateLinePosition()
     float sumOfMass=0;
     float maxValue = 0;
 
-    int size = sizeof(m_sensor)/sizeof(m_sensor[0]);
-    for(int i=0;i<size;i++)
+    for(int i = 0; i < NUMBER_OF_SENSORS; i++)
     {
         sumOfMass += m_sensor[i];
         sumOfMassXdistance += m_sensor[i] *i;
