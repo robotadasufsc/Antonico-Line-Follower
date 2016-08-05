@@ -20,13 +20,13 @@ void controllersSetup()
 
 
 Controller::Controller(float kc, float ti, float td, float ts)
-    {
-        this->kc = kc;
-        this->ti = ti;
-        this->td = td;
-        this->ts = ts;
-        this->taw = ti;
-    }
+{
+    this->kc = kc;
+    this->ti = ti;
+    this->td = td;
+    this->ts = ts;
+    this->taw = ti;
+}
 
 Controller::~Controller()
 {

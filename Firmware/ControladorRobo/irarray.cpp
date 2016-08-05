@@ -85,17 +85,17 @@ uint16_t IRArray::sensor(uint8_t i, uint8_t typ = 0)
     {
         switch(typ)
         {
-            case MAX:
-                return m_sensorHigh[i];
+        case MAX:
+            return m_sensorHigh[i];
             break;
 
-            case MIN:
-                return m_sensorLow[i];
+        case MIN:
+            return m_sensorLow[i];
             break;
 
-            case NORMAL:
-            default:
-                 return m_sensor[i];
+        case NORMAL:
+        default:
+            return m_sensor[i];
             break;
         }
     }
