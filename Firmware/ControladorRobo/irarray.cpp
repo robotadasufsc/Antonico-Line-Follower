@@ -21,11 +21,10 @@ IRArray::IRArray()
     m_enablePin = 4;
     pinMode(m_enablePin, OUTPUT);
 
-    memset(m_sensorLow, 0, sizeof(m_sensorLow));
-    memset(m_sensorHigh, 255, sizeof(m_sensorHigh));
     memset(m_sensorRaw, 0, sizeof(m_sensorRaw));
     memset(m_sensor, 0, sizeof(m_sensor));
     m_calibrating = false;
+    this->loadCalibrationFromEEPROM();
     this->turnOn();
 }
 
@@ -57,6 +56,8 @@ void IRArray::loadCalibrationFromEEPROM()
 
 void IRArray::startCalibration()
 {
+    memset(m_sensorLow, 0, sizeof(m_sensorLow));
+    memset(m_sensorHigh, 255, sizeof(m_sensorHigh));
     m_calibrating = true;
 }
 
