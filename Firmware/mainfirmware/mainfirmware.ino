@@ -5,6 +5,8 @@
 #include "hbridge.h"
 #include "control.h"
 #include "lib/Encoder/Encoder.h"
+#include "lib/Exposer/exposer.h"
+
 
 #define MAINFIRMWARE_DEBUG
 
@@ -51,6 +53,11 @@ Controller controle_esq = Controller(KC_ESQ, TI_ESQ, TD_ESQ, TS);
 Controller controle_dir = Controller(KC_DIR, TI_DIR, TD_DIR, TS);
 Controller directionController = Controller(0.1, 0, 0, 1/FREQ_ACT);
 
+// Communication
+
+Exposer* exposer = &Exposer::self();
+
+
 void peripheralsSetup()
 {
     // Sets switch pins to PULLUP mode
@@ -87,6 +94,9 @@ void setup()
     delay(100);
 
     debug("Took %d millis to finish.", millis()-startTime);
+
+    //Expose basespeed
+    exposer->registerVariable("basespeed", Exposer::_float, &basespeed);
 }
 
 void loop()
@@ -102,6 +112,12 @@ void loop()
     refDir = basespeed + u_direction;
     refEsq = basespeed - u_direction;
     basespeed *= 1.001;
+
+    while (Serial.available())
+    {
+        uint8_t data = Serial.read();
+        exposer->processByte(data);
+    }
 }
 
 // TIMER1 interruption, sample time for velocity control
