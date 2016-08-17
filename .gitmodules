@@ -1,3 +1,6 @@
 [submodule "Firmware/mainfirmware/lib/Encoder"]
 	path = Firmware/mainfirmware/lib/Encoder
 	url = https://github.com/PaulStoffregen/Encoder.git
+[submodule "Firmware/mainfirmware/lib/Exposer"]
+	path = Firmware/mainfirmware/lib/Exposer
+	url = https://github.com/Williangalvani/Exposer.git
